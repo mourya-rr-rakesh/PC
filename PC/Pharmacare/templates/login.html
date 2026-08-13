@@ -1,0 +1,975 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login — PharmaCare</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #00C9A7;
+      --brand-dark: #00A88B;
+      --brand-glow: rgba(0, 201, 167, 0.25);
+      --ink: #0A0F1E;
+      --surface: #F4F7FF;
+      --muted: #6B7A99;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Sora', sans-serif;
+    }
+
+    body {
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      background: var(--ink);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-logo span {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar-logo .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 8px var(--brand);
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.55);
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+    }
+
+    .nav-link.active {
+      background: rgba(0, 201, 167, 0.15);
+      color: var(--brand);
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: rgba(244, 247, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(10, 15, 30, 0.08);
+    }
+
+    .header-logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .header-logo .accent {
+      color: var(--brand);
+    }
+
+    #menu-btn {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid rgba(10, 15, 30, 0.1);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1.1rem;
+    }
+
+    #menu-btn:hover {
+      background: rgba(10, 15, 30, 0.05);
+    }
+
+    .header-nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .header-nav a:hover {
+      color: var(--ink);
+      background: rgba(10, 15, 30, 0.05);
+    }
+
+    .header-nav a.active {
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    /* ── THEME TOGGLE ── */
+    #theme-toggle {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid rgba(10, 15, 30, 0.1);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--muted);
+    }
+
+    #theme-toggle:hover {
+      background: rgba(10, 15, 30, 0.05);
+      color: var(--ink);
+    }
+
+    /* ── LOGIN SECTION ── */
+    .login-section {
+      min-height: calc(100vh - 65px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #E8FDF8 0%, #F4F7FF 50%, #EEF2FF 100%);
+    }
+
+    .login-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 201, 167, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 201, 167, 0.07) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+    }
+
+    .glow-1 {
+      width: 400px;
+      height: 400px;
+      background: rgba(0, 201, 167, 0.18);
+      top: -100px;
+      left: -80px;
+    }
+
+    .glow-2 {
+      width: 350px;
+      height: 350px;
+      background: rgba(99, 102, 241, 0.12);
+      bottom: -80px;
+      right: -60px;
+    }
+
+    /* ── CARD ── */
+    .login-card {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 920px;
+      background: #fff;
+      border: 1px solid rgba(10, 15, 30, 0.07);
+      border-radius: 24px;
+      box-shadow: 0 24px 80px rgba(10, 15, 30, 0.1);
+      overflow: hidden;
+      display: flex;
+    }
+
+    /* ── LEFT PANEL ── */
+    .login-panel-left {
+      background: var(--ink);
+      width: 340px;
+      flex-shrink: 0;
+      padding: 48px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-panel-left::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: rgba(0, 201, 167, 0.12);
+      filter: blur(60px);
+      top: -80px;
+      right: -80px;
+    }
+
+    .login-panel-left::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.1);
+      filter: blur(50px);
+      bottom: -40px;
+      left: -40px;
+    }
+
+    .panel-logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: #fff;
+      letter-spacing: -0.03em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-logo .accent {
+      color: var(--brand);
+    }
+
+    .panel-headline {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-headline h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.04em;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+
+    .panel-headline h2 span {
+      background: linear-gradient(135deg, var(--brand), #00E5C9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .panel-headline p {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.45);
+      line-height: 1.7;
+    }
+
+    .panel-features {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .panel-feature:last-child {
+      border-bottom: none;
+    }
+
+    .panel-feature-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(0, 201, 167, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .panel-feature span {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.55);
+      font-weight: 500;
+    }
+
+    /* ── RIGHT PANEL ── */
+    .login-panel-right {
+      flex: 1;
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 12px;
+    }
+
+    .section-tag::before {
+      content: '';
+      width: 14px;
+      height: 2px;
+      background: var(--brand);
+      border-radius: 2px;
+    }
+
+    .login-panel-right h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.04em;
+      margin-bottom: 6px;
+    }
+
+    .divider {
+      width: 40px;
+      height: 3px;
+      background: var(--brand);
+      border-radius: 2px;
+      margin: 0 0 24px;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .subtitle a {
+      color: var(--brand);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* ── FORM FIELDS ── */
+    .field-group {
+      margin-bottom: 18px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid rgba(10, 15, 30, 0.12);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      color: var(--ink);
+      background: #FAFBFF;
+      transition: all 0.2s;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .field-input::placeholder {
+      color: #B0BAD0;
+    }
+
+    .field-input:focus {
+      border-color: var(--brand);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0, 201, 167, 0.12);
+    }
+
+    /* ── FORGOT PASSWORD ── */
+    .forgot-link {
+      font-size: 0.78rem;
+      color: var(--brand);
+      font-weight: 600;
+      text-decoration: none;
+      float: right;
+      margin-top: -2px;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      background: var(--brand);
+      color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px var(--brand-glow);
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover {
+      background: var(--brand-dark);
+      box-shadow: 0 8px 28px var(--brand-glow);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      flex: 1;
+      padding: 11px;
+      background: transparent;
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(10, 15, 30, 0.12);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-outline:hover {
+      background: #F4F7FF;
+      border-color: rgba(10, 15, 30, 0.2);
+    }
+
+    .btn-danger {
+      width: 100%;
+      padding: 11px;
+      background: #FFF0F0;
+      color: #B91C1C;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 10px;
+      border: 1.5px solid #FCA5A5;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-danger:hover {
+      background: #FEE2E2;
+    }
+
+    /* ── PROFILE SECTION ── */
+    .profile-field {
+      padding: 11px 14px;
+      background: #FAFBFF;
+      border: 1.5px solid rgba(10, 15, 30, 0.08);
+      border-radius: 10px;
+      font-size: 0.875rem;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* ── MESSAGES ── */
+    #loginMessage {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-top: 12px;
+    }
+
+    #loginMessage.error {
+      background: #FFF0F0;
+      color: #B91C1C;
+      border: 1px solid #FCA5A5;
+    }
+
+    #loginMessage.success {
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #6EE7B7;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+    }
+
+    footer a {
+      color: rgba(255, 255, 255, 0.45);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--brand);
+    }
+
+    @media (max-width: 640px) {
+      .login-panel-left {
+        display: none;
+      }
+
+      .login-panel-right {
+        padding: 36px 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar"
+    class="fixed top-0 left-0 h-full w-64 shadow-2xl transform -translate-x-full transition duration-300 z-40">
+
+    <div class="sidebar-logo">
+      <div class="dot"></div>
+      <span>PharmaCare</span>
+    </div>
+
+    <nav class="p-4 space-y-1 text-sm mt-2">
+      <a href="/" class="nav-link">
+        <span class="nav-icon">🏠</span> Home
+      </a>
+      <a href="/dashboard.html" class="nav-link">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a href="/registration.html" class="nav-link">
+        <span class="nav-icon">📝</span> Registration
+      </a>
+      <a href="/login.html" class="nav-link active">
+        <span class="nav-icon">🔐</span> Login
+      </a>
+    </nav>
+
+    <div class="absolute bottom-6 left-4 right-4">
+      <div style="background:rgba(0,201,167,0.1);border:1px solid rgba(0,201,167,0.2);border-radius:12px;padding:14px;">
+        <div style="font-size:0.75rem;color:var(--brand);font-weight:600;margin-bottom:4px;">System Status</div>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);">All services operational</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- PAGE WRAPPER -->
+  <div id="page" class="transition-all duration-300">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-30">
+      <div class="flex justify-between items-center px-6 py-3 max-w-screen-xl mx-auto">
+
+        <div class="flex items-center gap-4">
+          <button id="menu-btn">☰</button>
+          <div class="flex items-center gap-3">
+            <img src="{% static 'logo.png' %}" class="w-9 h-9 rounded-xl">
+            <span class="header-logo">Pharma<span class="accent">Care</span></span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <nav class="hidden md:flex items-center gap-1 header-nav">
+            <a href="/profile.html">Profile</a>
+          </nav>
+
+          <!-- DARK MODE TOGGLE -->
+          <button id="theme-toggle" title="Toggle theme">
+            <svg id="theme-icon-light" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+      <section class="login-section">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+
+        <div class="login-card">
+
+          <!-- LEFT PANEL -->
+          <div class="login-panel-left">
+            <div class="panel-logo">Pharma<span class="accent">Care</span></div>
+
+            <div class="panel-headline">
+              <h2>Welcome <span>back.</span></h2>
+              <p>Sign in to access your dashboard, track inventory, and stay on top of expiry alerts.</p>
+            </div>
+
+            <div class="panel-features">
+              <div class="panel-feature">
+                <div class="panel-feature-icon">📊</div>
+                <span>Full inventory dashboard</span>
+              </div>
+              <div class="panel-feature">
+                <div class="panel-feature-icon">🔔</div>
+                <span>Live expiry notifications</span>
+              </div>
+              <div class="panel-feature">
+                <div class="panel-feature-icon">📤</div>
+                <span>One-click data export</span>
+              </div>
+              <div class="panel-feature">
+                <div class="panel-feature-icon">👤</div>
+                <span>Manage your profile</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT PANEL — LOGIN FORM -->
+          <div class="login-panel-right">
+
+            <!-- LOGIN FORM -->
+            <div id="loginSection">
+              <div class="section-tag">Sign in</div>
+              <h3>Access your account</h3>
+              <div class="divider"></div>
+              <p class="subtitle">Don't have an account? <a href="/registration.html">Create one free</a></p>
+
+              <form id="loginForm" onsubmit="return handleLogin(event)">
+                {% csrf_token %}
+
+                <div class="field-group">
+                  <label class="field-label" for="loginEmail">Email Address</label>
+                  <input id="loginEmail" type="email" placeholder="you@example.com" required class="field-input" />
+                </div>
+
+                <div class="field-group">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                    <label class="field-label" for="loginPassword" style="margin-bottom:0;">Password</label>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                  </div>
+                  <input id="loginPassword" type="password" placeholder="Your password" required class="field-input" />
+                </div>
+
+                <button type="submit" class="btn-submit">Sign In →</button>
+                <div id="loginMessage"></div>
+              </form>
+            </div>
+
+            <!-- PROFILE SECTION (hidden initially) -->
+            <div id="profileSection" class="hidden">
+              <div class="section-tag">Your profile</div>
+              <h3>Welcome back!</h3>
+              <div class="divider"></div>
+
+              <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+                <div>
+                  <div class="field-label">Name</div>
+                  <div id="profileName" class="profile-field">—</div>
+                </div>
+                <div>
+                  <div class="field-label">Email</div>
+                  <div id="profileEmail" class="profile-field">—</div>
+                </div>
+                <div>
+                  <div class="field-label">Organization</div>
+                  <div id="profileOrg" class="profile-field">—</div>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:10px;margin-bottom:12px;">
+                <button id="goToFullProfile" class="btn-outline">👤 Full Profile</button>
+                <button id="goToDashboard" class="btn-outline"
+                  style="background:rgba(0,201,167,0.08);border-color:rgba(0,201,167,0.3);color:var(--brand);">📊
+                  Dashboard</button>
+              </div>
+
+              <button onclick="logout()" class="btn-danger">Sign Out</button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="max-w-6xl mx-auto px-6 pt-14 pb-10 grid md:grid-cols-4 gap-10">
+
+        <div>
+          <div
+            style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;letter-spacing:-0.03em;margin-bottom:10px;">
+            Pharma<span style="color:var(--brand)">Care</span>
+          </div>
+          <p style="color:rgba(255,255,255,0.35);font-size:0.85rem;line-height:1.7;">
+            Medicine tracking and expiry alert system for modern healthcare.
+          </p>
+        </div>
+
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Quick Links</div>
+          <ul class="space-y-3">
+            <li><a href="/">Home</a></li>
+            <li><a href="/dashboard.html">Dashboard</a></li>
+            <li><a href="/registration.html">Registration</a></li>
+            <li><a href="/login.html">Login</a></li>
+            <li><a href="/profile.html">Profile</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Support</div>
+          <ul class="space-y-3">
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Use</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Contact</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="mailto:support@pharmacare.com"
+              style="color:var(--brand);font-size:0.875rem;">support@pharmacare.com</a>
+            <span style="color:rgba(255,255,255,0.35);font-size:0.85rem;">+91 98765 43210</span>
+            <span style="color:rgba(255,255,255,0.35);font-size:0.85rem;">Mumbai, India</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        style="border-top:1px solid rgba(255,255,255,0.07);padding:18px 24px;text-align:center;color:rgba(255,255,255,0.25);font-size:0.8rem;">
+        © <span id="year"></span> PharmaCare. All rights reserved.
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // ── SIDEBAR TOGGLE ──
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuBtn = document.getElementById("menu-btn");
+      const sidebar = document.getElementById("sidebar");
+      const backdrop = document.getElementById("sidebar-backdrop") || document.getElementById("sidebarOverlay");
+      const page = document.getElementById("page");
+
+      function openSidebar() {
+        sidebar.classList.remove("-translate-x-full");
+        if (backdrop) backdrop.classList.add("visible");
+        if (page && window.innerWidth >= 768) page.classList.add("ml-64");
+        if (menuBtn) menuBtn.classList.add("open");
+      }
+
+      function closeSidebar() {
+        sidebar.classList.add("-translate-x-full");
+        if (backdrop) backdrop.classList.remove("visible");
+        if (page && window.innerWidth >= 768) page.classList.remove("ml-64");
+        if (menuBtn) menuBtn.classList.remove("open");
+      }
+
+      if (menuBtn) {
+        menuBtn.addEventListener("click", function () {
+          sidebar.classList.contains("-translate-x-full") ? openSidebar() : closeSidebar();
+        });
+      }
+
+      if (backdrop) {
+        backdrop.addEventListener("click", closeSidebar);
+      }
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeSidebar();
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth >= 768 && backdrop) {
+          backdrop.classList.remove("visible");
+        }
+      });
+    });
+
+    // ── DARK MODE TOGGLE ──
+    const themeToggle = document.getElementById("theme-toggle");
+    const html = document.documentElement;
+    const lightIcon = document.getElementById("theme-icon-light");
+    const darkIcon = document.getElementById("theme-icon-dark");
+
+    themeToggle.addEventListener("click", () => {
+      html.classList.toggle("dark");
+      lightIcon.classList.toggle("hidden");
+      darkIcon.classList.toggle("hidden");
+    });
+
+    // ── LOGIN HANDLER ──
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const msg = document.getElementById('loginMessage');
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('meditrack_logged_in', JSON.stringify(data.user));
+          msg.textContent = '✓ Login successful! Redirecting...';
+          msg.className = 'success';
+          const redirectTo = data.redirect || (data.user && data.user.role === 'admin' ? '/admin.html' : '/dashboard.html');
+          setTimeout(() => { window.location.href = redirectTo; }, 300);
+        } else {
+          msg.textContent = '⚠ ' + (data.error || 'Login failed. Please check your credentials.');
+          msg.className = 'error';
+        }
+      } catch (err) {
+        msg.textContent = '⚠ An error occurred. Please try again.';
+        msg.className = 'error';
+      }
+      return false;
+    }
+
+    // ── FETCH PROFILE ──
+    async function fetchProfile() {
+      try {
+        const response = await fetch('http://localhost:3000/profile', { credentials: 'include' });
+        if (response.ok) {
+          const data = await response.json();
+          const user = data.user;
+          document.getElementById('profileName').textContent = user.name || 'N/A';
+          document.getElementById('profileEmail').textContent = user.email || 'N/A';
+          document.getElementById('profileOrg').textContent = user.org || 'N/A';
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    }
+
+    document.getElementById('goToFullProfile').addEventListener('click', () => {
+      window.location.href = 'profile.html';
+    });
+
+    document.getElementById('goToDashboard').addEventListener('click', () => {
+      window.location.href = '/dashboard.html';
+    });
+
+    // ── LOGOUT ──
+    function logout() {
+      fetch('/logout', { method: 'POST', credentials: 'include' })
+        .then(response => response.json())
+        .then(() => {
+          localStorage.removeItem('meditrack_logged_in');
+          window.location.href = 'login.html';
+        })
+        .catch(() => {
+          localStorage.removeItem('meditrack_logged_in');
+          window.location.href = 'login.html';
+        });
+    }
+
+    // ── CSRF HELPER ──
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  </script>
+
+</body>
+
+</html>

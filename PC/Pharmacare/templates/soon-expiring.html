@@ -1,0 +1,921 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Soon Expiring — PharmaCare</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #0EA5E9;
+      --brand-dark: #0284C7;
+      --brand-glow: rgba(14, 165, 233, 0.25);
+      --ink: #0F172A;
+      --surface: #F0F9FF;
+      --muted: #64748B;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Sora', sans-serif;
+    }
+
+    body {
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      background: var(--ink);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-logo span {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar-logo .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 8px var(--brand);
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.55);
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+    }
+
+    .nav-link.active {
+      background: rgba(245, 158, 11, 0.15);
+      color: #FCD34D;
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: rgba(244, 247, 255, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(10, 15, 30, 0.08);
+    }
+
+    .header-logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .header-logo .accent {
+      color: var(--brand);
+    }
+
+    #menu-btn {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid rgba(10, 15, 30, 0.1);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1.1rem;
+    }
+
+    #menu-btn:hover {
+      background: rgba(10, 15, 30, 0.05);
+    }
+
+    .header-nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .header-nav a:hover {
+      color: var(--ink);
+      background: rgba(10, 15, 30, 0.05);
+    }
+
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: rgba(239, 68, 68, 0.08);
+      color: #B91C1C;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(239, 68, 68, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.14);
+      transform: translateY(-1px);
+    }
+
+    /* ── PAGE HEADER BAR ── */
+    .page-header {
+      background: #fff;
+      border-bottom: 1px solid rgba(10, 15, 30, 0.07);
+      padding: 20px 24px;
+    }
+
+    .page-header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .page-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #D97706;
+    }
+
+    .section-tag::before {
+      content: '';
+      width: 14px;
+      height: 2px;
+      background: #D97706;
+      border-radius: 2px;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: #92400E;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* ── STAT CARDS ── */
+    .stat-card {
+      background: #fff;
+      border: 1px solid rgba(10, 15, 30, 0.07);
+      border-radius: 16px;
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s;
+      box-shadow: 0 2px 12px rgba(10, 15, 30, 0.04);
+    }
+
+    .stat-card:hover {
+      box-shadow: 0 10px 36px rgba(10, 15, 30, 0.09);
+      transform: translateY(-2px);
+    }
+
+    .stat-card .top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .stat-card .stat-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .stat-value {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .stat-card .stat-sub {
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: #fff;
+      border: 1px solid rgba(10, 15, 30, 0.07);
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(10, 15, 30, 0.05);
+    }
+
+    .card-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid rgba(10, 15, 30, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    /* ── TABLE ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    .data-table thead tr {
+      background: var(--surface);
+    }
+
+    .data-table thead th {
+      padding: 11px 13px;
+      text-align: left;
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 2px solid rgba(10, 15, 30, 0.07);
+      white-space: nowrap;
+    }
+
+    .data-table thead th.text-right {
+      text-align: right;
+    }
+
+    .data-table tbody tr {
+      border-bottom: 1px solid rgba(10, 15, 30, 0.05);
+      transition: background 0.15s;
+    }
+
+    .data-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .data-table tbody tr:hover {
+      background: rgba(245, 158, 11, 0.02);
+    }
+
+    .data-table tbody td {
+      padding: 12px 13px;
+      color: var(--ink);
+      font-weight: 500;
+      vertical-align: middle;
+    }
+
+    .data-table tbody td.text-right {
+      text-align: right;
+    }
+
+    /* ── DAYS BADGE ── */
+    .days-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .days-critical {
+      background: rgba(239, 68, 68, 0.1);
+      color: #B91C1C;
+    }
+
+    .days-warning {
+      background: rgba(249, 115, 22, 0.1);
+      color: #C2410C;
+    }
+
+    .days-caution {
+      background: rgba(245, 158, 11, 0.1);
+      color: #92400E;
+    }
+
+    .days-ok {
+      background: rgba(0, 201, 167, 0.1);
+      color: var(--brand-dark);
+    }
+
+    /* ── ROW HIGHLIGHT ── */
+    tr.row-critical td {
+      background: rgba(239, 68, 68, 0.03);
+    }
+
+    tr.row-warning td {
+      background: rgba(249, 115, 22, 0.025);
+    }
+
+    tr.row-caution td {
+      background: rgba(245, 158, 11, 0.02);
+    }
+
+    /* ── EMPTY / ERROR STATES ── */
+    .table-state {
+      padding: 48px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .table-state-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .table-state p {
+      font-size: 0.95rem;
+    }
+
+    .table-state small {
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1.5px solid rgba(10, 15, 30, 0.1);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-chip:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    .filter-chip.active {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+      box-shadow: 0 3px 10px var(--brand-glow);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+    }
+
+    footer a {
+      color: rgba(255, 255, 255, 0.45);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--brand);
+    }
+
+    #sidebarOverlay {
+      display: none;
+    }
+
+    #sidebarOverlay.visible {
+      display: block;
+    }
+
+    /* ── RESPONSIVE TABLE ── */
+    @media (max-width: 768px) {
+      .data-table thead {
+        display: none;
+      }
+
+      .data-table,
+      .data-table tbody,
+      .data-table tr,
+      .data-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .data-table tr {
+        margin-bottom: 12px;
+        border: 1px solid rgba(10, 15, 30, 0.07);
+        border-radius: 12px;
+        padding: 10px 14px;
+        background: #fff;
+      }
+
+      .data-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border: none;
+        font-size: 0.82rem;
+      }
+
+      .data-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--muted);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MOBILE OVERLAY -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-30 md:hidden"></div>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar"
+    class="fixed top-0 left-0 h-full w-64 shadow-2xl transform -translate-x-full transition duration-300 z-40">
+    <div class="sidebar-logo">
+      <div class="dot"></div>
+      <span>PharmaCare</span>
+    </div>
+    <nav class="p-4 space-y-1 text-sm mt-2">
+      <a href="/dashboard.html" class="nav-link"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="/total-medicines.html" class="nav-link"><span class="nav-icon">💊</span> Medicines</a>
+      <a href="/soon-expiring.html" class="nav-link active"><span class="nav-icon">⏳</span> Expiry Soon</a>
+      <a href="/expired-medicine.html" class="nav-link"><span class="nav-icon">❌</span> Expired</a>
+      <a href="/billing.html" class="nav-link"><span class="nav-icon">🧾</span> Invoice</a>
+      <a href="/khatabook.html" class="nav-link"><span class="nav-icon">📒</span> KhataBook</a>
+      <a href="/total-customers.html" class="nav-link"><span class="nav-icon">👥</span> Customers</a>
+      <a href="/profile.html" class="nav-link"><span class="nav-icon">👤</span> Profile</a>
+    </nav>
+    <div class="absolute bottom-6 left-4 right-4">
+      <div
+        style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.22);border-radius:12px;padding:14px;">
+        <div style="font-size:0.75rem;color:#FCD34D;font-weight:600;margin-bottom:4px;">⏳ Expiry Monitor</div>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.4);">Within 5 months</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- PAGE WRAPPER -->
+  <div id="page" class="transition-all duration-300">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-30">
+      <div class="flex justify-between items-center px-6 py-3 max-w-screen-xl mx-auto">
+        <div class="flex items-center gap-4">
+          <button id="menu-btn">☰</button>
+          <div class="flex items-center gap-3">
+            <img src="{% static 'logo.png' %}" class="w-9 h-9 rounded-xl">
+            <span class="header-logo">Pharma<span class="accent">Care</span></span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <nav class="hidden md:flex items-center gap-1 header-nav">
+            <a href="/profile.html">Profile</a>
+          </nav>
+          <button onclick="logout()" class="btn-logout">🚪 Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE TITLE BAR -->
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div>
+          <div class="section-tag" style="margin-bottom:6px;">Inventory</div>
+          <div class="page-title">Soon Expiring Medicines</div>
+        </div>
+        <div class="page-badge">⏳ Within 5 Months</div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <main class="max-w-screen-xl mx-auto px-6 py-8 space-y-6">
+
+      <!-- STAT CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+        <div class="stat-card">
+          <div class="top-bar" style="background:linear-gradient(90deg,#EF4444,#F87171);"></div>
+          <div class="stat-icon" style="background:rgba(239,68,68,0.1);">🚨</div>
+          <div class="stat-label">Expiring &lt; 30 Days</div>
+          <div class="stat-value" style="color:#DC2626;" id="statCritical">—</div>
+          <div class="stat-sub">Needs immediate action</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="top-bar" style="background:linear-gradient(90deg,#F97316,#FB923C);"></div>
+          <div class="stat-icon" style="background:rgba(249,115,22,0.1);">⚠️</div>
+          <div class="stat-label">Expiring 1–3 Months</div>
+          <div class="stat-value" style="color:#EA580C;" id="statWarning">—</div>
+          <div class="stat-sub">Plan ahead</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="top-bar" style="background:linear-gradient(90deg,#F59E0B,#FCD34D);"></div>
+          <div class="stat-icon" style="background:rgba(245,158,11,0.1);">📅</div>
+          <div class="stat-label">Expiring 3–5 Months</div>
+          <div class="stat-value" style="color:#D97706;" id="statCaution">—</div>
+          <div class="stat-sub">Monitor regularly</div>
+        </div>
+
+      </div>
+
+      <!-- TABLE CARD -->
+      <div class="card">
+        <div class="card-header" style="flex-wrap:wrap;gap:12px;">
+          <div>
+            <div class="section-tag" style="margin-bottom:4px;">Alert List</div>
+            <div class="card-title">Medicines Expiring Within 5 Months</div>
+          </div>
+          <div class="filter-bar">
+            <button class="filter-chip active" data-filter="all" onclick="applyFilter('all', this)">All</button>
+            <button class="filter-chip" data-filter="critical" onclick="applyFilter('critical', this)">🚨
+              &lt;30d</button>
+            <button class="filter-chip" data-filter="warning" onclick="applyFilter('warning', this)">⚠️ 1–3m</button>
+            <button class="filter-chip" data-filter="caution" onclick="applyFilter('caution', this)">📅 3–5m</button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Composition</th>
+                <th>Pack</th>
+                <th>Mfg Date</th>
+                <th>Exp Date</th>
+                <th class="text-right">MRP</th>
+                <th class="text-right">Buy Price</th>
+                <th class="text-right">Sell Price</th>
+                <th class="text-right">Stock</th>
+                 <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="soonMedList">
+              <tr>
+                <td colspan="12">
+                  <div class="table-state">
+                    <div class="table-state-icon">⏳</div>
+                    <p>Loading soon expiring medicines…</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-6">
+      <div class="max-w-6xl mx-auto px-6 pt-14 pb-10 grid md:grid-cols-4 gap-10">
+        <div>
+          <div
+            style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;letter-spacing:-0.03em;margin-bottom:10px;">
+            Pharma<span style="color:var(--brand)">Care</span>
+          </div>
+          <p style="color:rgba(255,255,255,0.35);font-size:0.85rem;line-height:1.7;">Medicine tracking and expiry alert
+            system for modern healthcare.</p>
+        </div>
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Quick Links</div>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+            <li><a href="/dashboard.html">Dashboard</a></li>
+            <li><a href="/total-medicines.html">Medicines</a></li>
+            <li><a href="/billing.html">Billing</a></li>
+          </ul>
+        </div>
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Support</div>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Contact</div>
+          <a href="mailto:support@pharmacare.com"
+            style="color:var(--brand);font-size:0.875rem;">support@pharmacare.com</a>
+          <div style="color:rgba(255,255,255,0.3);font-size:0.82rem;margin-top:8px;">+91 98765 43210</div>
+          <div style="color:rgba(255,255,255,0.3);font-size:0.82rem;margin-top:4px;">Mumbai, India</div>
+        </div>
+      </div>
+      <div
+        style="border-top:1px solid rgba(255,255,255,0.07);padding:18px 24px;text-align:center;color:rgba(255,255,255,0.25);font-size:0.8rem;">
+        © <span id="year"></span> PharmaCare. All rights reserved.
+      </div>
+    </footer>
+
+  </div><!-- end #page -->
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ── SIDEBAR TOGGLE ──
+    const menuBtn = document.getElementById('menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebarOverlay');
+    const page = document.getElementById('page');
+
+    function openSidebar() {
+      sidebar.classList.remove('-translate-x-full');
+      if (backdrop) backdrop.classList.add('visible');
+      if (page && window.innerWidth >= 768) page.classList.add('ml-64');
+      if (menuBtn) menuBtn.classList.add('open');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.add('-translate-x-full');
+      if (backdrop) backdrop.classList.remove('visible');
+      if (page && window.innerWidth >= 768) page.classList.remove('ml-64');
+      if (menuBtn) menuBtn.classList.remove('open');
+    }
+
+    if (menuBtn) {
+      menuBtn.addEventListener('click', function () {
+        sidebar.classList.contains('-translate-x-full') ? openSidebar() : closeSidebar();
+      });
+    }
+
+    if (backdrop) {
+      backdrop.addEventListener('click', closeSidebar);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSidebar();
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) {
+        if (backdrop) backdrop.classList.remove('visible');
+      }
+    });
+
+    // ── FILTER ──
+    let activeFilter = 'all';
+    function applyFilter(filter, btn) {
+      activeFilter = filter;
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderTable(window._allMeds || []);
+    }
+
+    // ── COMPUTE URGENCY ──
+    function urgency(daysLeft) {
+      if (daysLeft <= 30) return 'critical';
+      if (daysLeft <= 90) return 'warning';
+      return 'caution';
+    }
+
+    // ── FORMAT DATE ──
+    function fmtDate(d) {
+      if (!d) return '—';
+      return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function parsePackQty(pack) {
+      if (!pack) return 1;
+      const p = String(pack).trim().toLowerCase();
+      const stripMatch = p.match(/(\d+)\s*[x×]\s*(\d+)/);
+      if (stripMatch) return parseInt(stripMatch[1]) * parseInt(stripMatch[2]);
+      if (/\b(ml|l\b|litre|liter|g\b|gram|kg|oz|lb)\b/.test(p)) return 1;
+      const countMatch = p.match(/^(\d+)\s*(tab|cap|vial|ampoule|ampule|dose|patch|piece|pc|unit)/);
+      if (countMatch) return parseInt(countMatch[1]);
+      const soloNum = p.match(/^(\d+)$/);
+      if (soloNum) return parseInt(soloNum[1]);
+      return 1;
+    }
+
+    // ── RENDER TABLE ──
+    function renderTable(meds) {
+      const tbody = document.getElementById('soonMedList');
+      const filtered = activeFilter === 'all' ? meds : meds.filter(m => urgency(m.daysLeft) === activeFilter);
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="10"><div class="table-state">
+          <div class="table-state-icon">🎉</div>
+          <p style="color:#065F46;font-weight:600;">No medicines in this range!</p>
+          <small>All good for the selected filter.</small>
+        </div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(m => {
+        const u = urgency(m.daysLeft);
+        const badgeClass = u === 'critical' ? 'days-critical' : u === 'warning' ? 'days-warning' : 'days-caution';
+        const rowClass = `row-${u}`;
+        
+        const packQty = parsePackQty(m.pack);
+        const stockDisplay = `${m.stock ?? '—'}`;
+
+        return `<tr class="${rowClass}">
+          <td data-label="Name"><strong>${m.name || '—'}</strong></td>
+          <td data-label="Type">${m.type || '—'}</td>
+          <td data-label="Composition" style="font-size:0.8rem;color:var(--muted);">${m.composition || '—'}</td>
+          <td data-label="Pack">${m.pack || '—'}</td>
+          <td data-label="Mfg Date">${fmtDate(m.mfgDate)}</td>
+          <td data-label="Exp Date">${fmtDate(m.expDate)}</td>
+          <td data-label="Days Left">${(m.daysLeft ?? 0).toFixed(2)}</td>
+          <td data-label="MRP" class="text-right">₹${(m.mrp || 0).toFixed(2)}</td>
+          <td data-label="Buy Price" class="text-right">₹${(m.buyPrice || 0).toFixed(2)}</td>
+          <td data-label="Sell Price" class="text-right">₹${(m.sellPrice || 0).toFixed(2)}</td>
+          <td data-label="Stock" class="text-right">${stockDisplay}</td>
+          <td data-label="Action">
+            <button class="btn-edit" onclick="editMedicine('${((m._id||m.id||'')+'').replace(/'/g, "\\'")}')">Edit</button>
+            <button class="btn-delete" onclick="deleteMedicine('${((m._id||m.id||'')+'').replace(/'/g, "\\'")}')">Delete</button>
+            <button class="btn-order" onclick="orderMedicine('${((m._id||m.id||'')+'').replace(/'/g, "\\'")}')">Order</button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    // ── UPDATE STAT CARDS ──
+    function updateStats(meds) {
+      let critical = 0, warning = 0, caution = 0;
+      meds.forEach(m => {
+        const u = urgency(m.daysLeft);
+        if (u === 'critical') critical++;
+        else if (u === 'warning') warning++;
+        else caution++;
+      });
+      document.getElementById('statCritical').textContent = critical;
+      document.getElementById('statWarning').textContent = warning;
+      document.getElementById('statCaution').textContent = caution;
+    }
+
+    // ── ROW ACTION HELPERS ──
+    function editMedicine(id) {
+      if (!id) return alert('No record id');
+      try { window.location.href = `/medicines/${id}/edit`; } catch (e) { console.log('edit', id); }
+    }
+
+    async function deleteMedicine(id) {
+      if (!id) return alert('No record id');
+      if (!confirm('Delete this medicine?')) return;
+      try {
+        const res = await fetch(`/medicines/${id}`, { method: 'DELETE', credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        if (res.ok) location.reload(); else alert('Delete failed');
+      } catch (e) { alert('Delete failed'); }
+    }
+
+    function orderMedicine(id) {
+      if (!id) return alert('No record id');
+      try { window.location.href = `/billing.html?add=${id}`; } catch (e) { console.log('order', id); }
+    }
+
+    // ── LOGOUT ──
+    async function logout() {
+      try { await fetch('/logout', { method: 'GET', credentials: 'include' }); } catch { }
+      localStorage.removeItem('meditrack_logged_in');
+      window.location.href = '/login.html';
+    }
+
+    // ── EXPOSE CALLBACK FOR soon-expiring.js ──
+    // soon-expiring.js should call window.onSoonMedsLoaded(medsArray)
+    // where each item has: name, type, composition, pack, mfgDate, expDate, daysLeft,
+    //                       mrp, buyPrice, sellPrice, stock
+    window.onSoonMedsLoaded = function (meds) {
+      window._allMeds = meds || [];
+      updateStats(window._allMeds);
+      renderTable(window._allMeds);
+    };
+
+    // ── SHOW ERROR FALLBACK ──
+    window.onSoonMedsError = function (msg) {
+      document.getElementById('soonMedList').innerHTML = `<tr><td colspan="10">
+        <div class="table-state" style="color:#B91C1C;">
+          <div class="table-state-icon">⚠️</div>
+          <p>${msg || 'Error loading data'}</p>
+        </div></td></tr>`;
+    };
+  </script>
+
+  <!-- Original JS (unchanged) — should call window.onSoonMedsLoaded(meds) -->
+  <script src="{% static 'js/soon-expiring.js' %}"></script>
+
+</body>
+
+</html>

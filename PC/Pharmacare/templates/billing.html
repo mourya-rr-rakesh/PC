@@ -1,0 +1,1185 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Billing — PharmaCare</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --brand: #0EA5E9;
+            --brand-dark: #0284C7;
+            --brand-glow: rgba(14, 165, 233, 0.25);
+            --ink: #0F172A;
+            --surface: #F0F9FF;
+            --muted: #64748B;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Sora', sans-serif;
+        }
+
+        body {
+            background: var(--surface);
+            color: var(--ink);
+        }
+
+        /* ── SIDEBAR ── */
+        #sidebar {
+            background: var(--ink);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-logo span {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+            letter-spacing: -0.02em;
+        }
+
+        .sidebar-logo .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--brand);
+            box-shadow: 0 0 8px var(--brand);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.55);
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+
+        .nav-link.active {
+            background: rgba(0, 201, 167, 0.15);
+            color: var(--brand);
+        }
+
+        .nav-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            font-size: 0.9rem;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: rgba(244, 247, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(10, 15, 30, 0.08);
+        }
+
+        .header-logo {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: -0.03em;
+            color: var(--ink);
+        }
+
+        .header-logo .accent {
+            color: var(--brand);
+        }
+
+        #menu-btn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            border: 1px solid rgba(10, 15, 30, 0.1);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+        }
+
+        #menu-btn:hover {
+            background: rgba(10, 15, 30, 0.05);
+        }
+
+        .header-nav a {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: var(--ink);
+            background: rgba(10, 15, 30, 0.05);
+        }
+
+        .header-nav a.active {
+            color: var(--brand);
+            font-weight: 600;
+        }
+
+        /* ── PAGE HEADER BAR ── */
+        .page-header {
+            background: #fff;
+            border-bottom: 1px solid rgba(10, 15, 30, 0.07);
+            padding: 20px 24px;
+        }
+
+        .page-header-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .page-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--ink);
+            letter-spacing: -0.03em;
+        }
+
+        .page-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 100px;
+            background: rgba(0, 201, 167, 0.1);
+            border: 1px solid rgba(0, 201, 167, 0.25);
+            color: #00957A;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: #fff;
+            border: 1px solid rgba(10, 15, 30, 0.07);
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(10, 15, 30, 0.05);
+        }
+
+        .card-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid rgba(10, 15, 30, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.02em;
+        }
+
+        .card-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .card-body {
+            padding: 18px 20px;
+        }
+
+        /* ── SECTION TAG ── */
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--brand);
+        }
+
+        .section-tag::before {
+            content: '';
+            width: 14px;
+            height: 2px;
+            background: var(--brand);
+            border-radius: 2px;
+        }
+
+        /* ── CHAT INPUT ── */
+        .chat-input-wrap {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1.5px solid rgba(10, 15, 30, 0.12);
+            border-radius: 10px;
+            font-size: 0.875rem;
+            color: var(--ink);
+            background: #FAFBFF;
+            outline: none;
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .chat-input::placeholder {
+            color: #B0BAD0;
+        }
+
+        .chat-input:focus {
+            border-color: var(--brand);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 201, 167, 0.12);
+        }
+
+        /* ── BUTTONS ── */
+        .btn-brand {
+            padding: 10px 20px;
+            background: var(--brand);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            box-shadow: 0 3px 12px var(--brand-glow);
+        }
+
+        .btn-brand:hover {
+            background: var(--brand-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-blue {
+            padding: 10px 18px;
+            background: rgba(99, 102, 241, 0.07);
+            color: #4F46E5;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            border: 1.5px solid rgba(99, 102, 241, 0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline-blue:hover {
+            background: rgba(99, 102, 241, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-brand {
+            padding: 10px 18px;
+            background: rgba(0, 201, 167, 0.08);
+            color: var(--brand-dark);
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            border: 1.5px solid rgba(0, 201, 167, 0.25);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline-brand:hover {
+            background: rgba(0, 201, 167, 0.14);
+            transform: translateY(-1px);
+        }
+
+        .btn-yellow {
+            padding: 8px 16px;
+            background: rgba(234, 179, 8, 0.1);
+            color: #92400E;
+            font-weight: 600;
+            font-size: 0.82rem;
+            border-radius: 8px;
+            border: 1.5px solid rgba(234, 179, 8, 0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-yellow:hover {
+            background: rgba(234, 179, 8, 0.18);
+        }
+
+        /* ── CHAT BUBBLES ── */
+        .chat-bubble {
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            background: var(--surface);
+            border: 1px solid rgba(10, 15, 30, 0.07);
+            color: var(--ink);
+            max-width: 85%;
+            line-height: 1.6;
+        }
+
+        .chat-bubble.user {
+            background: rgba(0, 201, 167, 0.1);
+            border-color: rgba(0, 201, 167, 0.2);
+            color: #005A4E;
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        /* ── INVOICE PREVIEW ── */
+        #invoicePreview {
+            min-height: 140px;
+            background: #fff;
+            border: 1.5px solid rgba(10, 15, 30, 0.1);
+            overflow: hidden;
+            border-radius: 12px;
+            padding: 0;
+            font-size: 0.875rem;
+            color: var(--ink);
+        }
+
+        .inv-header {
+            background: var(--ink);
+            padding: 20px 24px 16px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .inv-org-name {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #fff;
+        }
+
+        .inv-org-name .accent {
+            color: var(--brand);
+        }
+
+        .inv-org-sub {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 3px;
+        }
+
+        .inv-meta {
+            text-align: right;
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.45);
+            line-height: 2;
+        }
+
+        .inv-meta strong {
+            color: var(--brand);
+            font-weight: 700;
+        }
+
+        .inv-body {
+            padding: 16px 20px 0;
+        }
+
+        .inv-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+        }
+
+        .inv-table thead tr {
+            background: var(--surface);
+        }
+
+        .inv-table thead th {
+            padding: 9px 10px;
+            text-align: left;
+            font-size: 0.67rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            border-bottom: 2px solid rgba(10, 15, 30, 0.08);
+        }
+
+        .inv-table thead th.text-right,
+        .inv-table tbody td.text-right {
+            text-align: right;
+        }
+
+        .inv-table tbody tr {
+            border-bottom: 1px solid rgba(10, 15, 30, 0.05);
+        }
+
+        .inv-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .inv-table tbody td {
+            padding: 9px 10px;
+            color: var(--ink);
+            font-weight: 500;
+        }
+
+        .inv-table tbody tr:hover td {
+            background: rgba(0, 201, 167, 0.03);
+        }
+
+        .inv-total-row {
+            padding: 12px 20px;
+            background: rgba(0, 201, 167, 0.06);
+            border-top: 2px solid rgba(0, 201, 167, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .inv-total-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .inv-total-amount {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            letter-spacing: -0.03em;
+        }
+
+        .inv-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            padding: 40px 20px;
+            color: var(--muted);
+            font-size: 0.875rem;
+        }
+
+        /* ── PRINT STYLES ── */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            #printArea,
+            #printArea * {
+                visibility: visible;
+            }
+
+            #printArea {
+                position: fixed;
+                inset: 0;
+                width: 100%;
+                background: #fff;
+                z-index: 9999;
+                padding: 40px;
+                box-sizing: border-box;
+            }
+
+            .inv-header {
+                background: #0A0F1E !important;
+            }
+
+            .inv-table thead tr {
+                background: #F4F7FF !important;
+            }
+
+            .inv-total-row {
+                background: #E8FDF8 !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        /* ── MEDICINE INPUT ── */
+        .med-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid rgba(10, 15, 30, 0.12);
+            border-radius: 10px;
+            font-size: 0.875rem;
+            color: var(--ink);
+            background: #FAFBFF;
+            outline: none;
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .med-input::placeholder {
+            color: #B0BAD0;
+        }
+
+        .med-input:focus {
+            border-color: var(--brand);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 201, 167, 0.12);
+        }
+
+        #quickSuggestions {
+            position: absolute;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1.5px solid rgba(10, 15, 30, 0.1);
+            border-radius: 10px;
+            margin-top: 4px;
+            max-height: 160px;
+            overflow-y: auto;
+            z-index: 20;
+            box-shadow: 0 8px 24px rgba(10, 15, 30, 0.1);
+        }
+
+        #quickSuggestions li {
+            padding: 10px 14px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-bottom: 1px solid rgba(10, 15, 30, 0.05);
+        }
+
+        #quickSuggestions li:hover {
+            background: rgba(0, 201, 167, 0.07);
+            color: var(--brand-dark);
+        }
+
+        #quickSuggestions li:last-child {
+            border-bottom: none;
+        }
+
+        /* ── MRP BADGE ── */
+        .mrp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 8px;
+            background: rgba(0, 201, 167, 0.08);
+            border: 1px solid rgba(0, 201, 167, 0.2);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--brand-dark);
+        }
+
+        /* ── MED LIST ITEMS ── */
+        #medList .med-item,
+        #cartList .cart-item {
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: var(--surface);
+            border: 1px solid rgba(10, 15, 30, 0.07);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        #medList .med-item:hover,
+        #cartList .cart-item:hover {
+            border-color: rgba(0, 201, 167, 0.25);
+            background: rgba(0, 201, 167, 0.04);
+        }
+
+        /* ── TOTAL BAR ── */
+        .total-bar {
+            padding: 14px 16px;
+            background: var(--ink);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .total-bar .label {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+        }
+
+        .total-bar .amount {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--brand);
+            letter-spacing: -0.03em;
+        }
+
+        /* ── ADMIN CONTROLS ── */
+        .admin-box {
+            padding: 14px;
+            background: rgba(234, 179, 8, 0.06);
+            border: 1.5px solid rgba(234, 179, 8, 0.2);
+            border-radius: 12px;
+        }
+
+        .markup-input {
+            width: 80px;
+            padding: 8px 10px;
+            border: 1.5px solid rgba(10, 15, 30, 0.12);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            outline: none;
+            background: #fff;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .markup-input:focus {
+            border-color: #EAB308;
+            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.1);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 40px;
+            height: 3px;
+            background: var(--brand);
+            border-radius: 2px;
+            margin: 10px 0 16px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--ink);
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.45);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--brand);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 h-full w-64 shadow-2xl transform -translate-x-full transition duration-300 z-40">
+
+        <div class="sidebar-logo">
+            <div class="dot"></div>
+            <span>PharmaCare</span>
+        </div>
+
+        <nav class="p-4 space-y-1 text-sm mt-2">
+            <a href="/" class="nav-link">
+                <span class="nav-icon">🏠</span> Home
+            </a>
+            <a href="/dashboard.html" class="nav-link">
+                <span class="nav-icon">📊</span> Dashboard
+            </a>
+            <a href="/billing.html" class="nav-link active">
+                <span class="nav-icon">🧾</span> Billing
+            </a>
+            <a href="/total-customers.html" class="nav-link">
+                <span class="nav-icon">👤</span>Customers
+            </a>
+             <a href="/total-medicines.html" class="nav-link">
+                <span class="nav-icon">👤</span>Medicines
+            </a>
+             <a href="/soon-expiring.html" class="nav-link">
+                <span class="nav-icon">👤</span> Soon Expire
+            </a>
+             <a href="/khatabook.html" class="nav-link">
+                <span class="nav-icon">👤</span> Khatabook
+            </a>
+
+            
+        </nav>
+
+        <div class="absolute bottom-6 left-4 right-4">
+            <div
+                style="background:rgba(0,201,167,0.1);border:1px solid rgba(0,201,167,0.2);border-radius:12px;padding:14px;">
+                <div style="font-size:0.75rem;color:var(--brand);font-weight:600;margin-bottom:4px;">System Status</div>
+                <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);">All services operational</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- PAGE WRAPPER -->
+    <div id="page" class="transition-all duration-300">
+
+        <!-- HEADER -->
+        <header class="sticky top-0 z-30">
+            <div class="flex justify-between items-center px-6 py-3 max-w-screen-xl mx-auto">
+                <div class="flex items-center gap-4">
+                    <button id="menu-btn">☰</button>
+                    <div class="flex items-center gap-3">
+                        <img src="{% static 'logo.png' %}" class="w-9 h-9 rounded-xl">
+                        <span class="header-logo">Pharma<span class="accent">Care</span></span>
+                    </div>
+                </div>
+
+                <nav class="hidden md:flex items-center gap-1 header-nav">
+                    <a href="/profile.html">Profile</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- PAGE TITLE BAR -->
+        <div class="page-header">
+            <div class="page-header-inner">
+                <div>
+                   
+                    <div class="page-title">Billing & Invoicing</div>
+                </div>
+                <div class="page-badge">🧾 Active Session</div>
+            </div>
+        </div>
+
+        <!-- MAIN BILLING -->
+        <main class="max-w-screen-xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- LEFT: Chat + Invoice -->
+            <section class="lg:col-span-2 flex flex-col gap-6">
+
+                <!-- Chat / Query Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="section-tag" style="margin-bottom:4px;">Smart Query</div>
+                            <div class="card-title">Ask about medicines or add to cart</div>
+                        </div>
+                        <div class="card-icon" style="background:rgba(0,201,167,0.1);">💬</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chat-input-wrap">
+                            <input id="chatInput" class="chat-input"
+                                placeholder='e.g. "price of Paracetamol" or "add Paracetamol 2"' />
+                            <button id="chatSend" class="btn-brand">Send →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invoice Preview Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="section-tag" style="margin-bottom:4px;">Document</div>
+                            
+                        </div>
+                        <div class="card-icon" style="background:rgba(99,102,241,0.1);">🧾</div>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- Printable Invoice Area -->
+                        <div id="printArea">
+                            <div id="invoicePreview">
+                                <!-- Default empty state -->
+                                <div class="inv-empty" id="invoiceEmpty">
+                                    <span style="font-size:1.6rem;">📄</span>
+                                    <span>Invoice will appear here once items are added.</span>
+                                </div>
+
+                                <!-- Invoice content (shown when items exist) -->
+                                <div id="invoiceContent" style="display:none;">
+
+                                    <!-- Header: Org name + Invoice meta -->
+                                    <div class="inv-header">
+                                        <div>
+                                            <div class="inv-org-name">Pharma<span class="accent">Care</span></div>
+                                            <div class="inv-org-sub">Medicine Tracking &amp; Expiry Management</div>
+                                            <div class="inv-org-sub" style="margin-top:6px;">📍 Siwan, India
+                                                &nbsp;|&nbsp; pharmacarepvt@gmail.com </div>
+                                        </div>
+                                        <div class="inv-meta">
+                                            <div><strong>INVOICE</strong></div>
+                                            <div>No: <strong id="invNumber">#INV-0001</strong></div>
+                                            <div>Date: <strong id="invDate">—</strong></div>
+                                            <div>Time: <strong id="invTime">—</strong></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Medicines Table -->
+                                    <div class="inv-body">
+                                        <table class="inv-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Medicine Name</th>
+                                                    <th>Pack</th>
+                                                    <th class="text-right">Qty</th>
+                                                    <th class="text-right">MRP (₹)</th>
+                                                    <th class="text-right">Total (₹)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="invoiceTableBody">
+                                                <!-- Rows populated by JS -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Total Row -->
+                                    <div class="inv-total-row" style="margin-top:12px;">
+                                        <span class="inv-total-label">Grand Total</span>
+                                        <span class="inv-total-amount">₹<span id="invGrandTotal">0.00</span></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End printArea -->
+
+                        <div class="flex gap-3 mt-4 flex-wrap no-print">
+                            <button id="printBtn" class="btn-outline-blue">🖨 Print Invoice</button>
+                            <button id="createInvoiceBtn" class="btn-outline-brand">✅ Create &amp; Save Invoice</button>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- RIGHT: Medicines + Cart -->
+            <aside class="flex flex-col gap-6">
+
+                <!-- Quick Add Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="section-tag" style="margin-bottom:4px;">Inventory</div>
+                            <div class="card-title"> Add Medicine</div>
+                        </div>
+                        <div class="card-icon" style="background:rgba(0,201,167,0.1);">💊</div>
+                    </div>
+                    <div class="card-body">
+                        <div style="position:relative;">
+                            <input id="quickMed" class="med-input" placeholder="Type medicine name..."
+                                autocomplete="off" />
+                            <div id="quickMrp" style="margin-top:8px;font-size:0.82rem;color:#475569;">
+                            </div>
+                            <ul id="quickSuggestions" class="hidden"></ul>
+                        </div>
+
+                        <div
+                            style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:8px;">
+                            
+                            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                <input id="quickPack" list="quickPackOptions" type="text" placeholder="Pack (e.g. 1×10 strip)" class="markup-input" style="width:160px;" />
+                                <datalist id="quickPackOptions"></datalist>
+                                <input id="quickPackMrp" type="number" step="0.01" min="0" placeholder="Pack MRP" class="markup-input" style="width:100px;" />
+                                <input id="quickQty" type="number" min="1" value="1" class="markup-input"
+                                    style="width:64px;" />
+                                <button id="quickAddBtn" class="btn-brand" style="padding:8px 16px;">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medicine List Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Medicines</div>
+                        <div class="card-icon" style="background:rgba(0,201,167,0.1);">📦</div>
+                    </div>
+                    <div class="card-body" style="padding-top:12px;">
+                        <div id="medList" class="space-y-2" style="max-height:220px;overflow-y:auto;"></div>
+                    </div>
+                </div>
+
+                <!-- Cart Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Cart</div>
+                        <div class="card-icon" style="background:rgba(99,102,241,0.1);">🛒</div>
+                    </div>
+                    <div class="card-body" style="padding-top:12px;">
+                        <div id="cartList" class="space-y-2 mb-4" style="max-height:180px;overflow-y:auto;"></div>
+                        <div class="total-bar">
+                            <span class="label">Cart Total</span>
+                            <span class="amount">₹<span id="cartTotal">0.00</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Controls Card -->
+                <div id="adminControls" class="card hidden">
+                    <div class="card-header">
+                        <div class="card-title">Admin: Markup</div>
+                        <div class="card-icon" style="background:rgba(234,179,8,0.1);">⚙️</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="admin-box">
+                            <div
+                                style="font-size:0.78rem;font-weight:600;color:#92400E;margin-bottom:10px;letter-spacing:0.02em;text-transform:uppercase;">
+                                Set Markup Percentage
+                            </div>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <input id="markupInput" type="number" min="0" max="1000" class="markup-input"
+                                    placeholder="0" />
+                                <button id="setMarkupBtn" class="btn-yellow">Set</button>
+                            </div>
+                            <div style="font-size:0.8rem;color:var(--muted);margin-top:10px;">
+                                Current markup: <strong style="color:var(--ink);"><span
+                                        id="currentMarkup">0</span>%</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="mt-6">
+            <div class="max-w-6xl mx-auto px-6 pt-14 pb-10 grid md:grid-cols-4 gap-10">
+
+                <div>
+                    <div
+                        style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;letter-spacing:-0.03em;margin-bottom:10px;">
+                        Pharma<span style="color:var(--brand)">Care</span>
+                    </div>
+                    <p style="color:rgba(255,255,255,0.35);font-size:0.85rem;line-height:1.7;">
+                        Medicine tracking and expiry alert system for modern healthcare.
+                    </p>
+                </div>
+
+                <div>
+                    <div
+                        style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+                        Quick Links</div>
+                    <ul class="space-y-3">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/dashboard.html">Dashboard</a></li>
+                        <li><a href="/billing.html">Billing</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div
+                        style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+                        Support</div>
+                    <ul class="space-y-3">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Use</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div
+                        style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+                        Contact</div>
+                    <a href="mailto:support@pharmacare.com" style="color:var(--brand);font-size:0.875rem;">
+                      pharmacarepvt@gmail.com
+                    </a>
+                </div>
+
+            </div>
+
+            <div
+                style="border-top:1px solid rgba(255,255,255,0.07);padding:18px 24px;text-align:center;color:rgba(255,255,255,0.25);font-size:0.8rem;">
+                © 2026 PharmaCare. All rights reserved.
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuBtn = document.getElementById("menu-btn");
+            const sidebar = document.getElementById("sidebar");
+            const backdrop = document.getElementById("sidebar-backdrop") || document.getElementById("sidebarOverlay");
+            const page = document.getElementById("page");
+
+            function openSidebar() {
+                sidebar.classList.remove("-translate-x-full");
+                if (backdrop) backdrop.classList.add("visible");
+                if (page && window.innerWidth >= 768) page.classList.add("ml-64");
+                if (menuBtn) menuBtn.classList.add("open");
+            }
+
+            function closeSidebar() {
+                sidebar.classList.add("-translate-x-full");
+                if (backdrop) backdrop.classList.remove("visible");
+                if (page && window.innerWidth >= 768) page.classList.remove("ml-64");
+                if (menuBtn) menuBtn.classList.remove("open");
+            }
+
+            if (menuBtn) {
+                menuBtn.addEventListener("click", function () {
+                    sidebar.classList.contains("-translate-x-full") ? openSidebar() : closeSidebar();
+                });
+            }
+
+            if (backdrop) {
+                backdrop.addEventListener("click", closeSidebar);
+            }
+
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") closeSidebar();
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 768 && backdrop) {
+                    backdrop.classList.remove("visible");
+                }
+            });
+
+            // ── Set invoice date/time on load ──
+            const now = new Date();
+            document.getElementById('invDate').textContent = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+            document.getElementById('invTime').textContent = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('invNumber').textContent = '#INV-' + String(Math.floor(1000 + Math.random() * 9000));
+        });
+
+        // ── Expose helper for billing.js to update the invoice preview ──
+        // billing.js should call: window.renderInvoice(cartItems)
+        // Each item: { name, qty, mrp, total, pack? }
+        window.renderInvoice = function (items) {
+            const empty = document.getElementById('invoiceEmpty');
+            const content = document.getElementById('invoiceContent');
+            const tbody = document.getElementById('invoiceTableBody');
+            const grandTotalEl = document.getElementById('invGrandTotal');
+
+            function parsePackQty(pack) {
+                if (!pack) return 1;
+                const p = String(pack).trim().toLowerCase();
+                const stripMatch = p.match(/(\d+)\s*[x×]\s*(\d+)/);
+                if (stripMatch) return parseInt(stripMatch[1]) * parseInt(stripMatch[2]);
+                if (/\b(ml|l\b|litre|liter|g\b|gram|kg|oz|lb)\b/.test(p)) return 1;
+                const countMatch = p.match(/^(\d+)\s*(tab|cap|vial|ampoule|ampule|dose|patch|piece|pc|unit)/);
+                if (countMatch) return parseInt(countMatch[1]);
+                const soloNum = p.match(/^(\d+)$/);
+                if (soloNum) return parseInt(soloNum[1]);
+                return 1;
+            }
+
+            if (!items || items.length === 0) {
+                empty.style.display = 'flex';
+                content.style.display = 'none';
+                return;
+            }
+
+            empty.style.display = 'none';
+            content.style.display = 'block';
+
+            tbody.innerHTML = '';
+            let grand = 0;
+
+            items.forEach((item, i) => {
+                // If a pack string is provided, divide the provided MRP by pack quantity to get per-unit MRP.
+                // Prefer raw pack MRP when available, otherwise use the passed mrp directly.
+                const packUnits = parsePackQty(item.pack);
+                const rawMrp = parseFloat(item.packMrp ?? item.mrp) || 0;
+                const unitMrp = packUnits > 1 ? rawMrp / packUnits : rawMrp;
+                const qty = parseInt(item.qty) || 0;
+                const total = parseFloat(item.total) || (unitMrp * qty);
+
+                grand += total;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+          <td style="color:var(--muted);">${i + 1}</td>
+          <td><strong>${item.name}</strong></td>
+          <td>${item.pack || '—'}</td>
+          <td class="text-right">${qty}</td>
+          <td class="text-right">₹${unitMrp.toFixed(2)}</td>
+          <td class="text-right" style="color:var(--brand-dark);font-weight:700;">₹${total.toFixed(2)}</td>
+        `;
+                tbody.appendChild(tr);
+            });
+
+            grandTotalEl.textContent = grand.toFixed(2);
+            // Also sync cartTotal if present
+            const ct = document.getElementById('cartTotal');
+            if (ct) ct.textContent = grand.toFixed(2);
+        };
+
+    </script>
+
+    <script>
+        // Fetch default pack MRP and populate the quick add Pack MRP field (safe, waits for DOM)
+        document.addEventListener('DOMContentLoaded', async function () {
+            const el = document.getElementById('quickPackMrp');
+            if (!el) return;
+            try {
+                const res = await fetch('/api/pack-mrp', { credentials: 'include' });
+                if (!res.ok) throw new Error('Status ' + res.status);
+                const data = await res.json();
+                if (data && data.pack_mrp !== undefined && data.pack_mrp !== null) {
+                    // ensure numeric value
+                    const val = Number(data.pack_mrp);
+                    if (!Number.isNaN(val)) el.value = val;
+                }
+            } catch (err) {
+                // non-fatal: log for debugging
+                console.debug('MRP fetch error:', err);
+            }
+        });
+    </script>
+
+    <script src="{% static 'js/billing.js' %}?v=2"></script>
+
+</body>
+
+</html>

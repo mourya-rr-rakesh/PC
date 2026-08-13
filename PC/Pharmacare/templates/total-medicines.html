@@ -1,0 +1,809 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Total Medicines — PharmaCare</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #0EA5E9;
+      --brand-dark: #0284C7;
+      --brand-glow: rgba(14, 165, 233, 0.25);
+      --ink: #0F172A;
+      --surface: #F0F9FF;
+      --muted: #64748B;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Sora', sans-serif;
+    }
+
+    body {
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      background: var(--ink);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-logo span {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar-logo .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 8px var(--brand);
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.55);
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+    }
+
+    .nav-link.active {
+      background: rgba(0, 201, 167, 0.15);
+      color: var(--brand);
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: rgba(244, 247, 255, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(10, 15, 30, 0.08);
+    }
+
+    .header-logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .header-logo .accent {
+      color: var(--brand);
+    }
+
+    #menu-btn {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid rgba(10, 15, 30, 0.1);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1.1rem;
+    }
+
+    #menu-btn:hover {
+      background: rgba(10, 15, 30, 0.05);
+    }
+
+    .header-nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .header-nav a:hover {
+      color: var(--ink);
+      background: rgba(10, 15, 30, 0.05);
+    }
+
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: rgba(239, 68, 68, 0.08);
+      color: #B91C1C;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(239, 68, 68, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.14);
+      transform: translateY(-1px);
+    }
+
+    /* ── PAGE HEADER BAR ── */
+    .page-header {
+      background: #fff;
+      border-bottom: 1px solid rgba(10, 15, 30, 0.07);
+      padding: 20px 24px;
+    }
+
+    .page-header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .page-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brand);
+    }
+
+    .section-tag::before {
+      content: '';
+      width: 14px;
+      height: 2px;
+      background: var(--brand);
+      border-radius: 2px;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      background: rgba(0, 201, 167, 0.08);
+      border: 1px solid rgba(0, 201, 167, 0.22);
+      color: var(--brand-dark);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* ── SEARCH BAR CARD ── */
+    .search-card {
+      background: #fff;
+      border: 1px solid rgba(10, 15, 30, 0.07);
+      border-radius: 14px;
+      padding: 16px 20px;
+      box-shadow: 0 2px 12px rgba(10, 15, 30, 0.04);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 38px 10px 14px;
+      border: 1.5px solid rgba(10, 15, 30, 0.12);
+      border-radius: 10px;
+      font-size: 0.875rem;
+      color: var(--ink);
+      background: #FAFBFF;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+
+    .search-input::placeholder {
+      color: #B0BAD0;
+    }
+
+    .search-input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(0, 201, 167, 0.12);
+      background: #fff;
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+
+    .search-clear:hover {
+      color: var(--ink);
+    }
+
+    .search-count {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* ── TABLE CARD ── */
+    .card {
+      background: #fff;
+      border: 1px solid rgba(10, 15, 30, 0.07);
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(10, 15, 30, 0.05);
+    }
+
+    .card-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid rgba(10, 15, 30, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    /* ── DATA TABLE ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    .data-table thead tr {
+      background: var(--surface);
+    }
+
+    .data-table thead th {
+      padding: 11px 12px;
+      text-align: left;
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 2px solid rgba(10, 15, 30, 0.07);
+      white-space: nowrap;
+    }
+
+    .data-table thead th.tr {
+      text-align: right;
+    }
+
+    .data-table thead th.tc {
+      text-align: center;
+    }
+
+    .data-table tbody tr {
+      border-bottom: 1px solid rgba(10, 15, 30, 0.05);
+      transition: background 0.15s;
+    }
+
+    .data-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .data-table tbody tr:hover {
+      background: rgba(0, 201, 167, 0.025);
+    }
+
+    .data-table tbody td {
+      padding: 11px 12px;
+      color: var(--ink);
+      font-weight: 500;
+      vertical-align: middle;
+    }
+
+    .data-table tbody td.tr {
+      text-align: right;
+    }
+
+    .data-table tbody td.tc {
+      text-align: center;
+    }
+
+    /* ── ROW HIGHLIGHTS ── */
+    tr.row-expired td {
+      background: rgba(239, 68, 68, 0.035) !important;
+    }
+
+    tr.row-soon td {
+      background: rgba(245, 158, 11, 0.03) !important;
+    }
+
+    /* ── ACTION BUTTONS ── */
+    .btn-act {
+      padding: 4px 10px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      border-radius: 7px;
+      border: 1.5px solid;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-edit-m {
+      background: rgba(234, 179, 8, 0.08);
+      color: #92400E;
+      border-color: rgba(234, 179, 8, 0.25);
+    }
+
+    .btn-edit-m:hover {
+      background: rgba(234, 179, 8, 0.16);
+    }
+
+    .btn-del-m {
+      background: rgba(239, 68, 68, 0.07);
+      color: #B91C1C;
+      border-color: rgba(239, 68, 68, 0.18);
+    }
+
+    .btn-del-m:hover {
+      background: rgba(239, 68, 68, 0.14);
+    }
+
+    /* ── EXPIRY BADGE ── */
+    .exp-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 9px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .exp-ok {
+      background: rgba(0, 201, 167, 0.08);
+      color: var(--brand-dark);
+    }
+
+    .exp-soon {
+      background: rgba(245, 158, 11, 0.1);
+      color: #92400E;
+    }
+
+    .exp-expired {
+      background: rgba(239, 68, 68, 0.1);
+      color: #B91C1C;
+    }
+
+    /* ── EMPTY / LOADING STATES ── */
+    .table-state {
+      padding: 48px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .table-state-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+    }
+
+    footer a {
+      color: rgba(255, 255, 255, 0.45);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--brand);
+    }
+
+    #sidebarOverlay {
+      display: none;
+    }
+
+    #sidebarOverlay.visible {
+      display: block;
+    }
+
+    /* ── RESPONSIVE TABLE ── */
+    @media (max-width: 900px) {
+      .data-table thead {
+        display: none;
+      }
+
+      .data-table,
+      .data-table tbody,
+      .data-table tr,
+      .data-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .data-table tr {
+        margin-bottom: 12px;
+        border: 1px solid rgba(10, 15, 30, 0.07);
+        border-radius: 12px;
+        padding: 10px 14px;
+        background: #fff;
+      }
+
+      .data-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border: none;
+        font-size: 0.82rem;
+      }
+
+      .data-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--muted);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MOBILE OVERLAY -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-30 md:hidden"></div>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar"
+    class="fixed top-0 left-0 h-full w-64 shadow-2xl transform -translate-x-full transition duration-300 z-40">
+    <div class="sidebar-logo">
+      <div class="dot"></div>
+      <span>PharmaCare</span>
+    </div>
+    <nav class="p-4 space-y-1 text-sm mt-2">
+      <a href="/dashboard.html" class="nav-link"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="/total-medicines.html" class="nav-link active"><span class="nav-icon">💊</span> Medicines</a>
+      <a href="/soon-expiring.html" class="nav-link"><span class="nav-icon">⏳</span> Expiry Soon</a>
+      <a href="/expired-medicine.html" class="nav-link"><span class="nav-icon">❌</span> Expired</a>
+      <a href="/billing.html" class="nav-link"><span class="nav-icon">🧾</span> Invoice</a>
+      <a href="/khatabook.html" class="nav-link"><span class="nav-icon">📒</span> KhataBook</a>
+      <a href="/total-customers.html" class="nav-link"><span class="nav-icon">👥</span> Customers</a>
+      <a href="/profile.html" class="nav-link"><span class="nav-icon">👤</span> Profile</a>
+    </nav>
+    <div class="absolute bottom-6 left-4 right-4">
+      <div
+        style="background:rgba(0,201,167,0.08);border:1px solid rgba(0,201,167,0.2);border-radius:12px;padding:14px;">
+        <div style="font-size:0.75rem;color:var(--brand);font-weight:600;margin-bottom:4px;">💊 Inventory</div>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.4);">All medicines listed</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- PAGE WRAPPER -->
+  <div id="page" class="transition-all duration-300">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-30">
+      <div class="flex justify-between items-center px-6 py-3 max-w-screen-xl mx-auto">
+        <div class="flex items-center gap-4">
+          <button id="menu-btn">☰</button>
+          <div class="flex items-center gap-3">
+            <img src="{% static 'logo.png' %}" class="w-9 h-9 rounded-xl">
+            <span class="header-logo">Pharma<span class="accent">Care</span></span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <nav class="hidden md:flex items-center gap-1 header-nav">
+            <a href="/profile.html">Profile</a>
+          </nav>
+          <button onclick="logout()" class="btn-logout">🚪 Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE TITLE BAR -->
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div>
+          <div class="section-tag" style="margin-bottom:6px;">Inventory</div>
+          <div class="page-title">Total Medicines</div>
+        </div>
+        <div class="page-badge">💊 Full Stock List</div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <main class="max-w-screen-xl mx-auto px-6 py-6 space-y-5">
+
+      <!-- SEARCH BAR -->
+      <div class="search-card">
+        <div class="search-wrap">
+          <input id="totalSearch" type="search" class="search-input"
+            placeholder="Search by name, type or composition…" />
+          <button id="clearSearch" class="search-clear" title="Clear">✕</button>
+        </div>
+        <div class="search-count" id="searchCount">Showing all medicines</div>
+      </div>
+
+      <!-- TABLE CARD -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="section-tag" style="margin-bottom:4px;">Stock</div>
+            <div class="card-title">All Medicines</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <span style="font-size:0.75rem;color:var(--muted);">
+              <span
+                style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(239,68,68,0.15);margin-right:4px;"></span>Expired
+            </span>
+            <span style="font-size:0.75rem;color:var(--muted);">
+              <span
+                style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(245,158,11,0.12);margin-right:4px;"></span>Expiring
+              Soon
+            </span>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Composition</th>
+                <th>Pack</th>
+                <th>Mfg Date</th>
+                <th>Exp Date</th>
+                <th class="tr">MRP</th>
+                <th class="tr">Buy Price</th>
+                <th class="tr">Sell Price</th>
+                <th class="tr">Stock</th>
+                <th class="tc">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="totalMedList">
+              <tr>
+                <td colspan="11">
+                  <div class="table-state">
+                    <div class="table-state-icon">💊</div>
+                    <p>Loading medicines…</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-6">
+      <div class="max-w-6xl mx-auto px-6 pt-14 pb-10 grid md:grid-cols-4 gap-10">
+        <div>
+          <div
+            style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;letter-spacing:-0.03em;margin-bottom:10px;">
+            Pharma<span style="color:var(--brand)">Care</span>
+          </div>
+          <p style="color:rgba(255,255,255,0.35);font-size:0.85rem;line-height:1.7;">Medicine tracking and expiry alert
+            system for modern healthcare.</p>
+        </div>
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Quick Links</div>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+            <li><a href="/dashboard.html">Dashboard</a></li>
+            <li><a href="/total-medicines.html">Medicines</a></li>
+            <li><a href="/billing.html">Billing</a></li>
+          </ul>
+        </div>
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Support</div>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Contact</div>
+          <a href="mailto:support@pharmacare.com"
+            style="color:var(--brand);font-size:0.875rem;">support@pharmacare.com</a>
+          <div style="color:rgba(255,255,255,0.3);font-size:0.82rem;margin-top:8px;">+91 98765 43210</div>
+          <div style="color:rgba(255,255,255,0.3);font-size:0.82rem;margin-top:4px;">Mumbai, India</div>
+        </div>
+      </div>
+      <div
+        style="border-top:1px solid rgba(255,255,255,0.07);padding:18px 24px;text-align:center;color:rgba(255,255,255,0.25);font-size:0.8rem;">
+        © <span id="year"></span> PharmaCare. All rights reserved.
+      </div>
+    </footer>
+
+  </div><!-- end #page -->
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ── SIDEBAR ──
+    function openSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      const page = document.getElementById('page');
+      sidebar.classList.remove('-translate-x-full');
+      if (overlay) overlay.classList.add('visible');
+      if (page && window.innerWidth >= 768) page.classList.add('ml-64');
+    }
+
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      const page = document.getElementById('page');
+      sidebar.classList.add('-translate-x-full');
+      if (overlay) overlay.classList.remove('visible');
+      if (page && window.innerWidth >= 768) page.classList.remove('ml-64');
+    }
+
+    const menuBtn = document.getElementById('menu-btn');
+    const backdrop = document.getElementById('sidebar-backdrop') || document.getElementById('sidebarOverlay');
+
+    if (menuBtn) {
+      menuBtn.addEventListener('click', () => {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.contains('-translate-x-full') ? openSidebar() : closeSidebar();
+      });
+    }
+
+    if (backdrop) {
+      backdrop.addEventListener('click', closeSidebar);
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeSidebar();
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) {
+        const overlay = document.getElementById('sidebarOverlay');
+        if (overlay) overlay.classList.remove('visible');
+      }
+    });
+
+    // ── SEARCH WIRING ──
+    // total-medicines.js populates #totalMedList.
+    // We enhance the existing search + clear buttons with count display.
+    const searchInput = document.getElementById('totalSearch');
+    const clearBtn = document.getElementById('clearSearch');
+    const countEl = document.getElementById('searchCount');
+
+    function updateCount() {
+      const rows = document.querySelectorAll('#totalMedList tr[data-med-id], #totalMedList tr.med-row');
+      const visible = [...rows].filter(r => r.style.display !== 'none').length;
+      const total = rows.length;
+      countEl.textContent = total
+        ? (visible === total ? `Showing all ${total} medicines` : `Showing ${visible} of ${total} medicines`)
+        : '';
+    }
+
+    // Observe tbody mutations so count updates after JS populates the table
+    const observer = new MutationObserver(updateCount);
+    observer.observe(document.getElementById('totalMedList'), { childList: true, subtree: true });
+
+    searchInput.addEventListener('input', () => {
+      // Let total-medicines.js handle its own filter if it listens to this event;
+      // also update count after a tick
+      setTimeout(updateCount, 50);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      setTimeout(updateCount, 50);
+    });
+
+    // ── LOGOUT ──
+    async function logout() {
+      try { await fetch('/logout', { method: 'GET', credentials: 'include' }); } catch { }
+      localStorage.removeItem('meditrack_logged_in');
+      window.location.href = '/login.html';
+    }
+  </script>
+
+  <!-- Original JS (unchanged) — populates #totalMedList and handles search -->
+  <script src="{% static 'js/total-medicines.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,945 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile — PharmaCare</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #00C9A7;
+      --brand-dark: #00A88B;
+      --brand-glow: rgba(0, 201, 167, 0.25);
+      --ink: #0A0F1E;
+      --surface: #F4F7FF;
+      --muted: #6B7A99;
+    }
+
+    * {
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Sora', sans-serif;
+    }
+
+    body {
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      background: var(--ink);
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 18px 12px;
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #fff;
+      letter-spacing: -0.03em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 8px var(--brand);
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .nav-link.active {
+      background: rgba(0, 201, 167, 0.12);
+      color: var(--brand);
+      font-weight: 700;
+    }
+
+    .nav-icon {
+      font-size: 1rem;
+    }
+
+    /* Sidebar overlay backdrop */
+    #sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 35;
+    }
+
+    #sidebar-backdrop.visible {
+      display: block;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: rgba(244, 247, 255, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(10, 15, 30, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .header-logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .header-logo .accent {
+      color: var(--brand);
+    }
+
+    /* Hamburger button */
+    #menu-btn {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      padding: 6px;
+      border-radius: 9px;
+      background: transparent;
+      border: 1.5px solid rgba(10, 15, 30, 0.12);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #menu-btn:hover {
+      background: rgba(10, 15, 30, 0.06);
+    }
+
+    #menu-btn span {
+      display: block;
+      height: 2px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: all 0.25s;
+    }
+
+    /* Animate hamburger to X when open */
+    #menu-btn.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    #menu-btn.open span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    #menu-btn.open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .btn-logout-hdr {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      background: rgba(239, 68, 68, 0.08);
+      color: #B91C1C;
+      font-weight: 600;
+      font-size: 0.82rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(239, 68, 68, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout-hdr:hover {
+      background: rgba(239, 68, 68, 0.14);
+      transform: translateY(-1px);
+    }
+
+    /* ── PAGE SHELL ── */
+    .profile-shell {
+      min-height: calc(100vh - 65px);
+      display: grid;
+      place-items: center;
+      padding: 48px 20px;
+      background:
+        radial-gradient(ellipse 60% 50% at 15% 20%, rgba(0, 201, 167, 0.09) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 85% 80%, rgba(99, 102, 241, 0.07) 0%, transparent 70%),
+        var(--surface);
+    }
+
+    /* ── SPLIT CARD ── */
+    .profile-card {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      max-width: 900px;
+      width: 100%;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(10, 15, 30, 0.14), 0 0 0 1px rgba(10, 15, 30, 0.06);
+    }
+
+    /* LEFT PANEL */
+    .panel-left {
+      background: var(--ink);
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel-left::before {
+      content: '';
+      position: absolute;
+      top: -70px;
+      left: -70px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 201, 167, 0.18), transparent 70%);
+    }
+
+    .panel-left::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      right: -40px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15), transparent 70%);
+    }
+
+    .avatar-ring {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand), #6366F1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 0 0 4px rgba(0, 201, 167, 0.2), 0 8px 32px rgba(0, 201, 167, 0.25);
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar-name {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: #fff;
+      text-align: center;
+      letter-spacing: -0.02em;
+      margin-bottom: 3px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar-org {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.4);
+      text-align: center;
+      margin-bottom: 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .left-divider {
+      width: 36px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .meta-item {
+      width: 100%;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .meta-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+      margin-bottom: 2px;
+      display: block;
+    }
+
+    .meta-value {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 500;
+      word-break: break-all;
+    }
+
+    .left-badge {
+      margin-top: auto;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(0, 201, 167, 0.1);
+      border: 1px solid rgba(0, 201, 167, 0.2);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+
+    .left-badge-label {
+      font-size: 0.68rem;
+      color: var(--brand);
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .left-badge-sub {
+      font-size: 0.76rem;
+      color: rgba(255, 255, 255, 0.3);
+      margin-top: 2px;
+    }
+
+    /* RIGHT PANEL */
+    .panel-right {
+      background: #fff;
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 6px;
+    }
+
+    .section-tag::before {
+      content: '';
+      width: 14px;
+      height: 2px;
+      background: var(--brand);
+      border-radius: 2px;
+    }
+
+    .panel-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 26px;
+    }
+
+    /* Fields */
+    .fields-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 20px;
+    }
+
+    .field-group {
+      margin-bottom: 18px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+
+    .field-display {
+      padding: 11px 13px;
+      background: var(--surface);
+      border: 1.5px solid transparent;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      color: var(--ink);
+      font-weight: 500;
+      min-height: 42px;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1.5px solid rgba(10, 15, 30, 0.12);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      color: var(--ink);
+      background: #FAFBFF;
+      transition: all 0.2s;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      display: none;
+      box-sizing: border-box;
+    }
+
+    .field-input::placeholder {
+      color: #B0BAD0;
+    }
+
+    .field-input:focus {
+      border-color: var(--brand);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0, 201, 167, 0.12);
+    }
+
+    .field-input.visible {
+      display: block;
+    }
+
+    .field-display.hidden-field {
+      display: none;
+    }
+
+    /* Status */
+    #statusMsg {
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 9px 14px;
+      border-radius: 9px;
+      border: 1px solid;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    #statusMsg.ok {
+      color: #065F46;
+      background: rgba(0, 201, 167, 0.08);
+      border-color: rgba(0, 201, 167, 0.25);
+    }
+
+    #statusMsg.err {
+      color: #B91C1C;
+      background: rgba(239, 68, 68, 0.07);
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: auto;
+      padding-top: 26px;
+      border-top: 1px solid rgba(10, 15, 30, 0.06);
+    }
+
+    .btn-edit-p {
+      padding: 10px 18px;
+      background: rgba(99, 102, 241, 0.08);
+      color: #4F46E5;
+      font-weight: 700;
+      font-size: 0.83rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(99, 102, 241, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-edit-p:hover {
+      background: rgba(99, 102, 241, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .btn-save-p {
+      padding: 10px 18px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.83rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 3px 12px var(--brand-glow);
+    }
+
+    .btn-save-p:hover {
+      background: var(--brand-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-dash-p {
+      padding: 10px 18px;
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 0.83rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(10, 15, 30, 0.1);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-dash-p:hover {
+      background: #e8ebf5;
+    }
+
+    .btn-admin-p {
+      padding: 10px 18px;
+      background: rgba(10, 15, 30, 0.06);
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 0.83rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(10, 15, 30, 0.12);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: none;
+    }
+
+    .btn-admin-p:hover {
+      background: rgba(10, 15, 30, 0.1);
+    }
+
+    .btn-logout-p {
+      padding: 10px 18px;
+      background: rgba(239, 68, 68, 0.08);
+      color: #B91C1C;
+      font-weight: 700;
+      font-size: 0.83rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(239, 68, 68, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout-p:hover {
+      background: rgba(239, 68, 68, 0.14);
+    }
+
+    /* Skeleton shimmer */
+    .skeleton {
+      display: inline-block;
+      background: linear-gradient(90deg, #edf0f7 25%, #f7f8fc 50%, #edf0f7 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 6px;
+      height: 14px;
+      width: 80px;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0
+      }
+
+      100% {
+        background-position: -200% 0
+      }
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--ink);
+    }
+
+    footer a {
+      color: rgba(255, 255, 255, 0.45);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--brand);
+    }
+
+    /* Responsive */
+    @media(max-width:680px) {
+      .profile-card {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-left {
+        padding: 28px 20px;
+      }
+
+      .panel-right {
+        padding: 28px 20px;
+      }
+
+      .fields-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR BACKDROP -->
+  <div id="sidebar-backdrop"></div>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar"
+    class="fixed top-0 left-0 h-full w-64 shadow-2xl transform -translate-x-full transition duration-300 z-40">
+
+    <div class="sidebar-logo">
+      <div class="dot"></div>
+      <span>PharmaCare</span>
+    </div>
+
+    <nav class="p-4 space-y-1 text-sm mt-2">
+      <a href="/" class="nav-link"><span class="nav-icon">🏠</span> Home</a>
+      <a href="/dashboard.html" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="/total-medicines.html" class="nav-link"><span class="nav-icon">💊</span> Medicines</a>
+      <a href="/soon-expiring.html" class="nav-link"><span class="nav-icon">⏳</span> Expiry Alert</a>
+      <a href="/billing.html" class="nav-link"><span class="nav-icon">🧾</span> Billing</a>
+      <a href="/khatabook.html" class="nav-link"><span class="nav-icon">📔</span> Khatabook</a>
+      <a href="/total-customers.html" class="nav-link"><span class="nav-icon">👥</span> Customers</a>
+      <a href="/profile.html" class="nav-link active"><span class="nav-icon">👤</span> Profile</a>
+    </nav>
+
+    <div class="absolute bottom-6 left-4 right-4">
+      <div style="background:rgba(0,201,167,0.1);border:1px solid rgba(0,201,167,0.2);border-radius:12px;padding:14px;">
+        <div style="font-size:0.75rem;color:var(--brand);font-weight:600;margin-bottom:4px;">System Status</div>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);">All services operational</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- HEADER -->
+  <header>
+    <div class="flex justify-between items-center px-6 py-3 max-w-screen-xl mx-auto">
+      <div class="flex items-center gap-3">
+
+        <!-- ✅ HAMBURGER BUTTON — was missing entirely -->
+        <button id="menu-btn" aria-label="Toggle sidebar">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <img src="{% static 'logo.png' %}" class="w-9 h-9 rounded-xl">
+        <span class="header-logo">Pharma<span class="accent">Care</span></span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="logout()" class="btn-logout-hdr">🚪 Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- PROFILE SHELL -->
+  <div class="profile-shell">
+    <div class="profile-card">
+
+      <!-- LEFT PANEL -->
+      <div class="panel-left">
+        <div class="avatar-ring">👤</div>
+        <div class="sidebar-name" id="sidebarName"><span class="skeleton"></span></div>
+        <div class="sidebar-org" id="sidebarOrg">—</div>
+        <div class="left-divider"></div>
+        <div class="meta-item">
+          <span class="meta-label">Phone</span>
+          <span class="meta-value" id="sidebarPhone">—</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Location</span>
+          <span class="meta-value" id="sidebarPlace">—</span>
+        </div>
+        <div class="left-badge" style="margin-top:28px;">
+          <div class="left-badge-label">✅ Active Account</div>
+          <div class="left-badge-sub">PharmaCare member</div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="panel-right">
+        <div class="section-tag">My Account</div>
+        <div class="panel-title">Profile Settings</div>
+
+        <div id="statusMsg"></div>
+
+        <div class="fields-grid">
+          <div class="field-group">
+            <label class="field-label">Full Name</label>
+            <div class="field-display" id="profileName"><span class="skeleton"></span></div>
+            <input type="text" id="editName" class="field-input" placeholder="Your name" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Shop / Org Name</label>
+            <div class="field-display" id="profileShop"><span class="skeleton"></span></div>
+            <input type="text" id="editShop" class="field-input" placeholder="Shop or organisation" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Phone Number</label>
+            <div class="field-display" id="profilePhone"><span class="skeleton"></span></div>
+            <input type="tel" id="editPhone" class="field-input" placeholder="Phone number" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Location</label>
+            <div class="field-display" id="profilePlace"><span class="skeleton"></span></div>
+            <input type="text" id="editPlace" class="field-input" placeholder="City / Place" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-edit-p" id="editBtn">✏️ Edit</button>
+          <button class="btn-save-p" id="updateProfileBtn">💾 Update</button>
+          <button class="btn-dash-p" id="dashboardBtn">🏠 Dashboard</button>
+          <button class="btn-admin-p" id="adminBtn">🔐 Admin Panel</button>
+          <button class="btn-logout-p" onclick="logout()">🚪 Logout</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="max-w-6xl mx-auto px-6 pt-14 pb-10 grid md:grid-cols-4 gap-10">
+      <div>
+        <div
+          style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;letter-spacing:-0.03em;margin-bottom:10px;">
+          Pharma<span style="color:var(--brand)">Care</span>
+        </div>
+        <p style="color:rgba(255,255,255,0.35);font-size:0.85rem;line-height:1.7;">Medicine tracking and expiry alert
+          system for modern healthcare.</p>
+      </div>
+      <div>
+        <div
+          style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+          Quick Links</div>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+          <li><a href="/dashboard.html">Dashboard</a></li>
+          <li><a href="/total-medicines.html">Medicines</a></li>
+          <li><a href="/billing.html">Billing</a></li>
+        </ul>
+      </div>
+      <div>
+        <div
+          style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+          Support</div>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms</a></li>
+        </ul>
+      </div>
+      <div>
+        <div
+          style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+          Contact</div>
+        <a href="mailto:support@pharmacare.com"
+          style="color:var(--brand);font-size:0.875rem;">support@pharmacare.com</a>
+        <div style="color:rgba(255,255,255,0.3);font-size:0.82rem;margin-top:8px;">+91 98765 43210</div>
+        <div style="color:rgba(255,255,255,0.3);font-size:0.82rem;margin-top:4px;">Mumbai, India</div>
+      </div>
+    </div>
+    <div
+      style="border-top:1px solid rgba(255,255,255,0.07);padding:18px 24px;text-align:center;color:rgba(255,255,255,0.25);font-size:0.8rem;">
+      © <span id="year"></span> PharmaCare. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    let isEditing = false;
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ── SIDEBAR TOGGLE ── (fixed)
+    const menuBtn = document.getElementById('menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+
+    function openSidebar() {
+      sidebar.classList.remove('-translate-x-full');
+      backdrop.classList.add('visible');
+      menuBtn.classList.add('open');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.add('-translate-x-full');
+      backdrop.classList.remove('visible');
+      menuBtn.classList.remove('open');
+    }
+
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.contains('-translate-x-full') ? openSidebar() : closeSidebar();
+    });
+
+    // Close sidebar when clicking backdrop
+    backdrop.addEventListener('click', closeSidebar);
+
+    // Close sidebar on ESC key
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
+
+    // ── PRELOAD FROM LOCALSTORAGE ──
+    const storedRaw = localStorage.getItem('meditrack_logged_in');
+    if (storedRaw) { try { fillProfile(JSON.parse(storedRaw)); } catch (e) { } }
+
+    // ── AUTH + SERVER FETCH ──
+    async function checkAuth() {
+      if (!localStorage.getItem('meditrack_logged_in')) { window.location.href = '/login.html'; return; }
+      try {
+        const res = await fetch('/profile_api', { credentials: 'include' });
+        if (!res.ok) { localStorage.removeItem('meditrack_logged_in'); window.location.href = '/login.html'; return; }
+        const data = await res.json();
+        const u = data.user;
+        fillProfile(u);
+        localStorage.setItem('meditrack_logged_in', JSON.stringify(u));
+        const isAdmin = (u && u.role === 'admin') || data.isSuperAdmin || (u && u.email === 'mouryarakesh512@gmail.com');
+        document.getElementById('adminBtn').style.display = isAdmin ? 'block' : 'none';
+      } catch (e) { console.error('Auth error', e); }
+    }
+
+    function fillProfile(u) {
+      setText('profileName', u.name || 'N/A');
+      setText('profileShop', u.org || 'N/A');
+      setText('profilePhone', u.phone || 'N/A');
+      setText('profilePlace', u.place || '—');
+      setText('sidebarName', u.name || 'User');
+      setText('sidebarOrg', u.org || 'PharmaCare');
+      setText('sidebarPhone', u.phone || '—');
+      setText('sidebarPlace', u.place || '—');
+      setValue('editName', u.name || '');
+      setValue('editShop', u.org || '');
+      setValue('editPhone', u.phone || '');
+      setValue('editPlace', u.place || '');
+    }
+
+    function setText(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+    function setValue(id, v) { const el = document.getElementById(id); if (el) el.value = v; }
+
+    // ── TOGGLE EDIT ──
+    function toggleEdit() {
+      isEditing = !isEditing;
+      ['Name', 'Shop', 'Phone', 'Place'].forEach(f => {
+        document.getElementById('profile' + f).classList.toggle('hidden-field', isEditing);
+        document.getElementById('edit' + f).classList.toggle('visible', isEditing);
+      });
+      document.getElementById('editBtn').textContent = isEditing ? '✕ Cancel' : '✏️ Edit';
+    }
+
+    function showStatus(msg, isErr = false) {
+      const el = document.getElementById('statusMsg');
+      el.textContent = msg;
+      el.className = isErr ? 'err' : 'ok';
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+
+    // ── SAVE ──
+    async function saveProfile() {
+      const stored = localStorage.getItem('meditrack_logged_in');
+      const storedUser = stored ? JSON.parse(stored) : {};
+      const payload = {
+        name: document.getElementById('editName').value.trim(),
+        email: storedUser.email || '',
+        phone: document.getElementById('editPhone').value.trim(),
+        org: document.getElementById('editShop').value.trim(),
+        place: document.getElementById('editPlace').value.trim(),
+      };
+      if (!payload.name) { showStatus('Name is required.', true); return; }
+      try {
+        const res = await fetch('/update-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+          credentials: 'include',
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.message) {
+          fillProfile(payload);
+          localStorage.setItem('meditrack_logged_in', JSON.stringify(Object.assign(storedUser, payload)));
+          toggleEdit();
+          showStatus('✅ Profile updated successfully!');
+        } else { showStatus('Error: ' + (data.error || 'Update failed'), true); }
+      } catch (e) { showStatus('An error occurred.', true); }
+    }
+
+    // ── ADMIN BUTTON ──
+    document.getElementById('adminBtn').addEventListener('click', async () => {
+      try {
+        const res = await fetch('/profile_api', { credentials: 'include' });
+        if (!res.ok) { window.location.href = '/login.html'; return; }
+        const data = await res.json();
+        const ok = (data.user && data.user.role === 'admin') || (data.user && data.user.email === 'mouryarakesh512@gmail.com');
+        if (ok) window.location.href = '/admin.html';
+        else alert('Not authorized.');
+      } catch { window.location.href = '/admin.html'; }
+    });
+
+    // ── BUTTON WIRING ──
+    document.getElementById('editBtn').addEventListener('click', toggleEdit);
+    document.getElementById('dashboardBtn').addEventListener('click', () => { window.location.href = '/dashboard.html'; });
+    document.getElementById('updateProfileBtn').addEventListener('click', () => {
+      if (!isEditing) { showStatus('Click ✏️ Edit first to modify your profile.', true); return; }
+      saveProfile();
+    });
+
+    // ── LOGOUT ──
+    async function logout() {
+      try { await fetch('/logout', { method: 'POST', credentials: 'include' }); } catch { }
+      localStorage.removeItem('meditrack_logged_in');
+      window.location.href = '/login.html';
+    }
+
+    // ── CSRF ──
+    function getCookie(name) {
+      const m = document.cookie.match(new RegExp('(?:^|;\\s*)' + name + '=([^;]*)'));
+      return m ? decodeURIComponent(m[1]) : null;
+    }
+
+    window.addEventListener('DOMContentLoaded', checkAuth);
+  </script>
+
+</body>
+
+</html>

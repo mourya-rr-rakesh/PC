@@ -1,0 +1,938 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Expired Medicines — PharmaCare</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #00C9A7;
+      --brand-dark: #00A88B;
+      --brand-glow: rgba(0, 201, 167, 0.25);
+      --ink: #1a1f2e;
+      --surface: #22272f;
+      --surface-2: #2a303b;
+      --muted: #8d99ae;
+      --card-bg: #2e343f;
+      --border: rgba(255, 255, 255, 0.07);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Sora', sans-serif;
+    }
+
+    body {
+      background: var(--surface);
+      color: #e2e8f0;
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      background: var(--ink);
+      border-right: 1px solid var(--border);
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-logo span {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar-logo .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 10px var(--brand);
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.45);
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+    }
+
+    .nav-link.active {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ff6b6b;
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: rgba(26, 31, 46, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .header-logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+      color: #f1f5f9;
+    }
+
+    .header-logo .accent {
+      color: var(--brand);
+    }
+
+    #menu-btn {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1.1rem;
+      color: #e2e8f0;
+    }
+
+    #menu-btn:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .header-nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .header-nav a:hover {
+      color: #e2e8f0;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .header-nav a.active {
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: rgba(239, 68, 68, 0.08);
+      color: #ff6b6b;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(239, 68, 68, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.14);
+      transform: translateY(-1px);
+    }
+
+    /* ── PAGE HEADER BAR ── */
+    .page-header {
+      background: linear-gradient(135deg, rgba(26, 31, 46, 0.8) 0%, rgba(42, 48, 59, 0.8) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 24px;
+    }
+
+    .page-header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .page-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #f1f5f9;
+      letter-spacing: -0.03em;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #ff6b6b;
+    }
+
+    .section-tag::before {
+      content: '';
+      width: 14px;
+      height: 2px;
+      background: #ff6b6b;
+      border-radius: 2px;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #ff6b6b;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .page-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: #ff6b6b;
+      border-radius: 50%;
+      box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+    }
+
+    /* ── STAT CARDS ── */
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .stat-card:hover {
+      box-shadow: 0 10px 36px rgba(0, 0, 0, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .stat-card .top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .stat-card .stat-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .stat-value {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: #e2e8f0;
+    }
+
+    .stat-card .stat-sub {
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      letter-spacing: -0.02em;
+    }
+
+    .card-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    /* ── REFRESH BUTTON ── */
+    .btn-refresh {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      background: rgba(0, 201, 167, 0.08);
+      color: var(--brand-dark);
+      font-weight: 600;
+      font-size: 0.82rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(0, 201, 167, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-refresh:hover {
+      background: rgba(0, 201, 167, 0.14);
+      transform: translateY(-1px);
+    }
+
+    /* ── TABLE ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .data-table thead tr {
+      background: rgba(0, 201, 167, 0.05);
+    }
+
+    .data-table thead th {
+      padding: 11px 14px;
+      text-align: left;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .data-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .data-table tbody tr:hover {
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .data-table tbody td {
+      padding: 12px 14px;
+      color: #e2e8f0;
+      font-weight: 500;
+      vertical-align: middle;
+    }
+
+    .data-table tbody td.text-right {
+      text-align: right;
+    }
+
+    .data-table tbody td.text-center {
+      text-align: center;
+    }
+
+    /* ── DAYS EXPIRED BADGE ── */
+    .days-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .days-critical {
+      background: rgba(239, 68, 68, 0.1);
+      color: #B91C1C;
+    }
+
+    .days-warning {
+      background: rgba(249, 115, 22, 0.1);
+      color: #C2410C;
+    }
+
+    .days-mild {
+      background: rgba(234, 179, 8, 0.1);
+      color: #92400E;
+    }
+
+    /* ── DELETE BUTTON ── */
+    .btn-del {
+      padding: 5px 12px;
+      background: rgba(239, 68, 68, 0.07);
+      color: #B91C1C;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 7px;
+      border: 1.5px solid rgba(239, 68, 68, 0.18);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-del:hover {
+      background: rgba(239, 68, 68, 0.14);
+    }
+
+    /* ── EMPTY / ERROR STATES ── */
+    .table-state {
+      padding: 48px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .table-state-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .table-state p {
+      font-size: 0.95rem;
+    }
+
+    .table-state small {
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+    }
+
+    footer a {
+      color: rgba(255, 255, 255, 0.45);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--brand);
+    }
+
+    /* ── MOBILE OVERLAY ── */
+    #sidebarOverlay {
+      display: none;
+    }
+
+    #sidebarOverlay.visible {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MOBILE OVERLAY -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-30 md:hidden"></div>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar"
+    class="fixed top-0 left-0 h-full w-64 shadow-2xl transform -translate-x-full transition duration-300 z-40">
+
+    <div class="sidebar-logo">
+      <div class="dot"></div>
+      <span>PharmaCare</span>
+    </div>
+
+    <nav class="p-4 space-y-1 text-sm mt-2">
+      <a href="/dashboard.html" class="nav-link"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="/total-medicines.html" class="nav-link"><span class="nav-icon">💊</span> Medicines</a>
+      <a href="/soon-expiring.html" class="nav-link"><span class="nav-icon">⏳</span> Expiry Soon</a>
+      <a href="/expired-medicine.html" class="nav-link active"><span class="nav-icon">❌</span> Expired</a>
+      <a href="/billing.html" class="nav-link"><span class="nav-icon">🧾</span> Invoice</a>
+      <a href="/khatabook.html" class="nav-link"><span class="nav-icon">📒</span> KhataBook</a>
+      <a href="/total-customers.html" class="nav-link"><span class="nav-icon">👥</span> Customers</a>
+      <a href="/profile.html" class="nav-link"><span class="nav-icon">👤</span> Profile</a>
+    </nav>
+
+    <div class="absolute bottom-6 left-4 right-4">
+      <div
+        style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:14px;">
+        <div style="font-size:0.75rem;color:#F87171;font-weight:600;margin-bottom:4px;">⚠ Expiry Monitor</div>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.45);">Showing expired stock</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- PAGE WRAPPER -->
+  <div id="page" class="transition-all duration-300">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-30">
+      <div class="flex justify-between items-center px-6 py-3 max-w-screen-xl mx-auto">
+
+        <div class="flex items-center gap-4">
+          <button id="menu-btn">☰</button>
+          <div class="flex items-center gap-3">
+            <img src="{% static 'logo.png' %}" class="w-9 h-9 rounded-xl">
+            <span class="header-logo">Pharma<span class="accent">Care</span></span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <nav class="hidden md:flex items-center gap-1 header-nav">
+            <a href="/profile.html">Profile</a>
+          </nav>
+          <button onclick="logout()" class="btn-logout">🚪 Logout</button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- PAGE TITLE BAR -->
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div>
+          <div class="section-tag" style="margin-bottom:6px;">Inventory</div>
+          <div class="page-title">Expired Medicines</div>
+        </div>
+        <div class="page-badge">❌ Past Expiry Date</div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <main class="max-w-screen-xl mx-auto px-6 py-8 space-y-6">
+
+      <!-- STAT CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+        <div class="stat-card">
+          <div class="top-bar" style="background:linear-gradient(90deg,#EF4444,#F87171);"></div>
+          <div class="stat-icon" style="background:rgba(239,68,68,0.1);">❌</div>
+          <div class="stat-label">Total Expired</div>
+          <div class="stat-value" style="color:#DC2626;" id="totalExpired">0</div>
+          <div class="stat-sub">Unique medicines</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="top-bar" style="background:linear-gradient(90deg,#F97316,#FB923C);"></div>
+          <div class="stat-icon" style="background:rgba(249,115,22,0.1);">📦</div>
+          <div class="stat-label">Total Expired Stock</div>
+          <div class="stat-value" style="color:#EA580C;" id="totalStock">0</div>
+          <div class="stat-sub">Units to be discarded</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="top-bar" style="background:linear-gradient(90deg,#F59E0B,#FCD34D);"></div>
+          <div class="stat-icon" style="background:rgba(245,158,11,0.1);">💸</div>
+          <div class="stat-label">Total Stock Value</div>
+          <div class="stat-value" style="color:#D97706;font-size:1.4rem;" id="totalValue">₹0.00</div>
+          <div class="stat-sub">Estimated loss</div>
+        </div>
+
+      </div>
+
+      <!-- EXPIRED TABLE CARD -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="section-tag" style="margin-bottom:4px;">Details</div>
+            <div class="card-title">Expired Medicines List</div>
+          </div>
+          <button onclick="loadExpiredMedicines()" class="btn-refresh">🔄 Refresh</button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Medicine Name</th>
+                <th>Type</th>
+                <th>Composition</th>
+                <th>Pack</th>
+                <th>Expiry Date</th>
+                <th class="text-center">Days Expired</th>
+                <th class="text-right">Stock</th>
+                <th class="text-right">MRP</th>
+                <th class="text-right">Value</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="expiredTableBody">
+              <tr>
+                <td colspan="10">
+                  <div class="table-state">
+                    <div class="table-state-icon">⏳</div>
+                    <p>Loading expired medicines…</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-6">
+      <div class="max-w-6xl mx-auto px-6 pt-14 pb-10 grid md:grid-cols-4 gap-10">
+
+        <div>
+          <div
+            style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;letter-spacing:-0.03em;margin-bottom:10px;">
+            Pharma<span style="color:var(--brand)">Care</span>
+          </div>
+          <p style="color:rgba(255,255,255,0.35);font-size:0.85rem;line-height:1.7;">
+            Medicine tracking and expiry alert system for modern healthcare.
+          </p>
+        </div>
+
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Quick Links</div>
+          <ul class="space-y-3">
+            <li><a href="/dashboard.html">Dashboard</a></li>
+            <li><a href="/total-medicines.html">Medicines</a></li>
+            <li><a href="/billing.html">Billing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Support</div>
+          <ul class="space-y-3">
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Contact</div>
+          <a href="mailto:support@pharmacare.com" style="color:var(--brand);font-size:0.875rem;">
+            support@pharmacare.com
+          </a>
+        </div>
+
+      </div>
+      <div
+        style="border-top:1px solid rgba(255,255,255,0.07);padding:18px 24px;text-align:center;color:rgba(255,255,255,0.25);font-size:0.8rem;">
+        © <span id="year"></span> PharmaCare. All rights reserved.
+      </div>
+    </footer>
+
+  </div><!-- end #page -->
+
+  <script>
+    // ── FORMAT DATE ──
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      try {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      } catch (e) {
+        return '—';
+      }
+    }
+
+    
+
+    // ── INIT ──
+    window.addEventListener('DOMContentLoaded', function () {
+      console.log('Page loaded, initializing...');
+      document.getElementById("year").textContent = new Date().getFullYear();
+      
+      // Load expired medicines data
+      setTimeout(() => {
+        loadExpiredMedicines();
+      }, 100);
+    });
+    async function loadExpiredMedicines() {
+      const tbody = document.getElementById('expiredTableBody');
+      
+      try {
+        const response = await fetch('/medicines/expired', {
+          method: 'GET',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.status === 401 || response.status === 403) {
+          localStorage.removeItem('meditrack_logged_in');
+          window.location.href = '/login.html';
+          return;
+        }
+
+        const data = await response.json();
+        console.log('Fetched data:', data);
+        if (Array.isArray(data.medicines)) {
+          console.log('[expired] sample packs:', data.medicines.slice(0,5).map(m => ({ id: m._id, name: m.name, pack: m.pack })));
+        }
+
+        if (!response.ok) {
+          showError('Error loading expired medicines: ' + (data.error || 'Unknown error'));
+          return;
+        }
+
+        // Update stats
+        const totalExpired = data.totalExpired || 0;
+        const totalStock = data.totalStock || 0;
+        const totalValue = data.totalValue || 0;
+
+        const expiredEl = document.getElementById('totalExpired');
+        const stockEl = document.getElementById('totalStock');
+        const valueEl = document.getElementById('totalValue');
+
+        if (expiredEl) expiredEl.textContent = totalExpired;
+        if (stockEl) stockEl.textContent = totalStock;
+        if (valueEl) valueEl.textContent = '₹' + totalValue.toFixed(2);
+
+        // Render medicines in table
+        const medicines = data.medicines || [];
+        renderExpiredMedicines(medicines);
+        
+      } catch (error) {
+        console.error('Error:', error);
+        showError('An error occurred while loading expired medicines: ' + error.message);
+      }
+    }
+
+    // ── RENDER TABLE ──
+    function renderExpiredMedicines(medicines) {
+      const tbody = document.getElementById('expiredTableBody');
+
+      if (!medicines || medicines.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9">
+              <div class="table-state">
+                <div class="table-state-icon">🎉</div>
+                <p style="color:#34d8b5;font-weight:600;">No expired medicines found!</p>
+                <small style="color:var(--muted);">All your medicines are within their valid expiry dates.</small>
+              </div>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      let html = '';
+      medicines.forEach((med, index) => {
+        const days = parseInt(med.daysExpired) || 0;
+        const badgeClass = days > 30 ? 'days-critical' : days > 7 ? 'days-warning' : 'days-mild';
+        const medicineName = (med.name || '').replace(/'/g, "\\'");
+
+        html += `
+          <tr>
+            <td><strong style="color:#e2e8f0;">${med.name || '—'}</strong></td>
+            <td style="color:var(--muted);">${med.type || '—'}</td>
+            <td style="color:var(--muted);font-size:0.8rem;">${med.composition || '—'}</td>
+            <td style="color:var(--muted);">${med.pack || '—'}</td>
+            <td style="color:var(--muted);">${formatDate(med.expDate)}</td>
+            <td class="text-center">
+              <span style="background:rgba(239,68,68,0.15);color:#ff6b6b;padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:600;">${days}d ago</span>
+            </td>
+            <td class="text-right" style="color:#e2e8f0;">${med.stock || 0}</td>
+            <td class="text-right" style="color:var(--brand);">₹${(med.mrp || 0).toFixed(2)}</td>
+            <td class="text-right" style="color:#ff6b6b;font-weight:700;">₹${(med.stockValue || 0).toFixed(2)}</td>
+            <td class="text-center">
+              <button style="background:rgba(239,68,68,0.2);color:#ff6b6b;border:1px solid rgba(239,68,68,0.3);padding:6px 12px;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onclick="deleteExpiredMedicine(${med._id}, '${medicineName}')">🗑 Delete</button>
+            </td>
+          </tr>`;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // ── DELETE ──
+    async function deleteExpiredMedicine(medicineId, medicineName) {
+      if (!confirm(`Delete "${medicineName}"? This cannot be undone.`)) return;
+
+      try {
+        const response = await fetch(`/medicines/${medicineId}`, {
+          method: 'DELETE',
+          headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+          credentials: 'include'
+        });
+
+        if (response.status === 401 || response.status === 403) {
+          localStorage.removeItem('meditrack_logged_in');
+          window.location.href = '/login.html';
+          return;
+        }
+
+        const data = await response.json();
+        if (!response.ok) { alert('Error: ' + (data.error || 'Unknown error')); return; }
+        loadExpiredMedicines();
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while deleting the medicine');
+      }
+    }
+
+    // ── SIDEBAR TOGGLE ──
+    const menuBtn = document.getElementById('menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebarOverlay');
+    const page = document.getElementById('page');
+
+    function openSidebar() {
+      sidebar.classList.remove('-translate-x-full');
+      if (backdrop) backdrop.classList.add('visible');
+      if (page && window.innerWidth >= 768) page.classList.add('ml-64');
+      if (menuBtn) menuBtn.classList.add('open');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.add('-translate-x-full');
+      if (backdrop) backdrop.classList.remove('visible');
+      if (page && window.innerWidth >= 768) page.classList.remove('ml-64');
+      if (menuBtn) menuBtn.classList.remove('open');
+    }
+
+    if (menuBtn) {
+      menuBtn.addEventListener('click', function () {
+        sidebar.classList.contains('-translate-x-full') ? openSidebar() : closeSidebar();
+      });
+    }
+
+    if (backdrop) {
+      backdrop.addEventListener('click', closeSidebar);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSidebar();
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) {
+        if (backdrop) backdrop.classList.remove('visible');
+      }
+    });
+    function showError(message) {
+      const tbody = document.getElementById('expiredTableBody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="9">
+            <div style="text-align:center;padding:40px 20px;color:#ff6b6b;">
+              <div style="font-size:2.5rem;margin-bottom:12px;">⚠️</div>
+              <p style="font-weight:600;">${message}</p>
+            </div>
+          </td>
+        </tr>`;
+    }
+
+    // ── FORMAT DATE ──
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      try {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      } catch (e) {
+        return '—';
+      }
+    }
+
+    // ── LOGOUT ──
+    async function logout() {
+      try {
+        await fetch('/logout', { method: 'GET', credentials: 'include' });
+        localStorage.removeItem('meditrack_logged_in');
+        window.location.href = '/login.html';
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    }
+  </script>
+
+</body>
+
+</html>

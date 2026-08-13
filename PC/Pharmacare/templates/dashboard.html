@@ -1,0 +1,1140 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard — PharmaCare</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #0EA5E9;
+      --brand-dark: #0284C7;
+      --brand-glow: rgba(14, 165, 233, 0.25);
+      --ink: #0F172A;
+      --surface: #F0F9FF;
+      --muted: #64748B;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Sora', sans-serif;
+    }
+
+    body {
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      background: var(--ink);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-logo span {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar-logo .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 8px var(--brand);
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.55);
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+    }
+
+    .nav-link.active {
+      background: rgba(0, 201, 167, 0.15);
+      color: var(--brand);
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: rgba(244, 247, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(10, 15, 30, 0.08);
+    }
+
+    .header-logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .header-logo .accent {
+      color: var(--brand);
+    }
+
+    #menu-btn {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid rgba(10, 15, 30, 0.1);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1.1rem;
+    }
+
+    #menu-btn:hover {
+      background: rgba(10, 15, 30, 0.05);
+    }
+
+    .header-nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .header-nav a:hover {
+      color: var(--ink);
+      background: rgba(10, 15, 30, 0.05);
+    }
+
+    .header-nav a.active {
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    /* ── THEME TOGGLE ── */
+    #theme-toggle {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid rgba(10, 15, 30, 0.1);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--muted);
+    }
+
+    #theme-toggle:hover {
+      background: rgba(10, 15, 30, 0.05);
+      color: var(--ink);
+    }
+
+    /* ── PAGE HEADER BAR ── */
+    .page-header {
+      background: #fff;
+      border-bottom: 1px solid rgba(10, 15, 30, 0.07);
+      padding: 20px 24px;
+    }
+
+    .page-header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .page-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+    }
+
+    .org-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 100px;
+      background: var(--ink);
+      color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .org-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+
+    /* ── SECTION TAG ── */
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brand);
+    }
+
+    .section-tag::before {
+      content: '';
+      width: 14px;
+      height: 2px;
+      background: var(--brand);
+      border-radius: 2px;
+    }
+
+    /* ── STAT CARDS ── */
+    .stat-card {
+      background: #fff;
+      border: 1px solid rgba(10, 15, 30, 0.07);
+      border-radius: 16px;
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(10, 15, 30, 0.04);
+    }
+
+    .stat-card:hover {
+      box-shadow: 0 12px 40px rgba(10, 15, 30, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .stat-card .top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .stat-card .stat-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .stat-value {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .stat-card .stat-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: #fff;
+      border: 1px solid rgba(10, 15, 30, 0.07);
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(10, 15, 30, 0.05);
+    }
+
+    .card-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid rgba(10, 15, 30, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    .card-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .card-body {
+      padding: 18px 20px;
+    }
+
+    /* ── FORM FIELDS ── */
+    .field-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid rgba(10, 15, 30, 0.12);
+      border-radius: 10px;
+      font-size: 0.875rem;
+      color: var(--ink);
+      background: #FAFBFF;
+      transition: all 0.2s;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .field-input::placeholder {
+      color: #B0BAD0;
+    }
+
+    .field-input:focus {
+      border-color: var(--brand);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0, 201, 167, 0.12);
+    }
+
+    /* ── BUTTONS ── */
+    .btn-brand {
+      padding: 9px 18px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 3px 12px var(--brand-glow);
+    }
+
+    .btn-brand:hover {
+      background: var(--brand-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-muted {
+      padding: 9px 18px;
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(10, 15, 30, 0.1);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-muted:hover {
+      background: #eaedf5;
+    }
+
+    .btn-indigo {
+      padding: 9px 18px;
+      background: rgba(99, 102, 241, 0.08);
+      color: #4F46E5;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(99, 102, 241, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-indigo:hover {
+      background: rgba(99, 102, 241, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      padding: 9px 18px;
+      background: rgba(239, 68, 68, 0.07);
+      color: #B91C1C;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(239, 68, 68, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.13);
+    }
+
+    /* ── SEARCH BAR ── */
+    .search-wrap {
+      position: relative;
+      flex: 1;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 13px 10px 36px;
+      border: 1.5px solid rgba(10, 15, 30, 0.12);
+      border-radius: 10px;
+      font-size: 0.875rem;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .search-input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(0, 201, 167, 0.1);
+    }
+
+    /* ── TABLE ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .data-table thead tr {
+      background: var(--surface);
+    }
+
+    .data-table thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 2px solid rgba(10, 15, 30, 0.07);
+      white-space: nowrap;
+    }
+
+    .data-table tbody tr {
+      border-bottom: 1px solid rgba(10, 15, 30, 0.05);
+      transition: background 0.15s;
+    }
+
+    .data-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .data-table tbody tr:hover {
+      background: rgba(0, 201, 167, 0.03);
+    }
+
+    .data-table tbody td {
+      padding: 10px 14px;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* Expiry row colors */
+    .row-expired {
+      background: rgba(239, 68, 68, 0.05) !important;
+    }
+
+    .row-expired td {
+      color: #991B1B;
+    }
+
+    .row-soon {
+      background: rgba(234, 179, 8, 0.06) !important;
+    }
+
+    .row-soon td {
+      color: #78350F;
+    }
+
+    /* Badge pills */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-red {
+      background: rgba(239, 68, 68, 0.1);
+      color: #B91C1C;
+    }
+
+    .badge-yellow {
+      background: rgba(234, 179, 8, 0.12);
+      color: #92400E;
+    }
+
+    .badge-green {
+      background: rgba(0, 201, 167, 0.1);
+      color: var(--brand-dark);
+    }
+
+    /* ── COMPOSITION SUGGESTIONS ── */
+    #compositionSuggestions {
+      position: absolute;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1.5px solid rgba(10, 15, 30, 0.1);
+      border-radius: 10px;
+      margin-top: 4px;
+      max-height: 160px;
+      overflow-y: auto;
+      z-index: 20;
+      box-shadow: 0 8px 24px rgba(10, 15, 30, 0.1);
+    }
+
+    #compositionSuggestions div {
+      padding: 9px 14px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(10, 15, 30, 0.05);
+      transition: background 0.15s;
+    }
+
+    #compositionSuggestions div:hover {
+      background: rgba(0, 201, 167, 0.07);
+      color: var(--brand-dark);
+    }
+
+    /* ── LEGEND ── */
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 40px;
+      height: 3px;
+      background: var(--brand);
+      border-radius: 2px;
+      margin: 8px 0 16px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+    }
+
+    footer a {
+      color: rgba(255, 255, 255, 0.45);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--brand);
+    }
+
+    /* ── RESPONSIVE TABLE ── */
+    @media (max-width: 1024px) {
+      .overflow-x-auto {
+        overflow-x: auto;
+      }
+
+      table th,
+      table td {
+        white-space: normal;
+        word-break: break-word;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar"
+    class="fixed top-0 left-0 h-full w-64 shadow-2xl transform -translate-x-full transition duration-300 z-40">
+
+    <div class="sidebar-logo">
+      <div class="dot"></div>
+      <span>PharmaCare</span>
+    </div>
+
+    <nav class="p-4 space-y-1 text-sm mt-2">
+      <a href="/" class="nav-link"><span class="nav-icon">🏠</span> Home</a>
+      <a href="/dashboard.html" class="nav-link active"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="/total-medicines.html" class="nav-link"><span class="nav-icon">💊</span> Medicines</a>
+      <a href="/soon-expiring.html" class="nav-link"><span class="nav-icon">💊</span> ⏳ ALERT</a>
+      <a href="/billing.html" class="nav-link"><span class="nav-icon">🧾</span> Billing</a>
+      <a href="/khatabook.html" class="nav-link"><span class="nav-icon">📔</span> Khatabook</a>
+      <a href="/total-customers.html" class="nav-link"><span class="nav-icon">📔</span> Customers</a>
+      <a href="/profile.html" class="nav-link"><span class="nav-icon">👤</span> Profile</a>
+    </nav>
+
+    <div class="absolute bottom-6 left-4 right-4">
+      <div style="background:rgba(0,201,167,0.1);border:1px solid rgba(0,201,167,0.2);border-radius:12px;padding:14px;">
+        <div style="font-size:0.75rem;color:var(--brand);font-weight:600;margin-bottom:4px;">System Status</div>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);">All services operational</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- PAGE WRAPPER -->
+  <div id="page" class="transition-all duration-300">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-30">
+      <div class="flex justify-between items-center px-6 py-3 max-w-screen-xl mx-auto">
+        <div class="flex items-center gap-4">
+          <button id="menu-btn">☰</button>
+          <div class="flex items-center gap-3">
+            <img src="{% static 'logo.png' %}" class="w-9 h-9 rounded-xl">
+            <span class="header-logo">Pharma<span class="accent">Care</span></span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <nav class="hidden md:flex items-center gap-1 header-nav">
+            <a href="/profile.html">Profile</a>
+          </nav>
+          <button id="theme-toggle" title="Toggle theme">
+            <svg id="theme-icon-light" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE TITLE BAR -->
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div>
+          <div class="section-tag" style="margin-bottom:6px;">Overview</div>
+          <div class="page-title">Dashboard</div>
+        </div>
+        <div class="org-badge">
+          <div class="dot"></div>
+          <span id="orgName">#</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-screen-xl mx-auto px-6 py-8 space-y-8">
+
+      <!-- ── STATS GRID ── -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+
+        <div class="stat-card" onclick="window.location.href='total-medicines.html'">
+          <div class="top-bar" style="background: linear-gradient(90deg, var(--brand), #00E5C9);"></div>
+          <div class="stat-icon" style="background:rgba(0,201,167,0.1);">💊</div>
+          <div class="stat-label">Total Medicines</div>
+          <div class="stat-value" style="color:var(--brand-dark);" id="totalCount">0</div>
+          <div class="stat-sub">Tap to view all →</div>
+        </div>
+
+        <div class="stat-card" onclick="window.location.href='soon-expiring.html'">
+          <div class="top-bar" style="background: linear-gradient(90deg, #F59E0B, #FCD34D);"></div>
+          <div class="stat-icon" style="background:rgba(245,158,11,0.1);">⏳</div>
+          <div class="stat-label">Expiring Soon</div>
+          <div class="stat-value" style="color:#D97706;" id="soonCount">0</div>
+          <div class="stat-sub">Within 5 months</div>
+        </div>
+
+        <div class="stat-card" style="cursor:default;">
+          <div class="top-bar" style="background: linear-gradient(90deg, #6366F1, #818CF8);"></div>
+          <div class="stat-icon" style="background:rgba(99,102,241,0.1);">💰</div>
+          <div class="stat-label">Total Profit</div>
+          <div class="stat-value" style="color:#4F46E5;font-size:1.4rem;" id="totalProfit">₹0.00</div>
+          <div class="stat-sub">All-time earnings</div>
+        </div>
+
+        <div class="stat-card" style="cursor:default;">
+          <div class="top-bar" style="background: linear-gradient(90deg, #8B5CF6, #C084FC);"></div>
+          <div class="stat-icon" style="background:rgba(139,92,246,0.1);">🕐</div>
+          <div class="stat-label">Last Updated</div>
+          <div class="stat-value" style="color:#7C3AED;font-size:1rem;margin-top:4px;" id="lastUpdated">—</div>
+          <div class="stat-sub">Most recent entry</div>
+        </div>
+
+        <div class="stat-card" onclick="window.location.href='khatabook.html'">
+          <div class="top-bar" style="background: linear-gradient(90deg, #F97316, #FB923C);"></div>
+          <div class="stat-icon" style="background:rgba(249,115,22,0.1);">📔</div>
+          <div class="stat-label">Khatabook</div>
+          <div class="stat-value" style="color:#EA580C;font-size:1.3rem;">View</div>
+          <div class="stat-sub">Credit ledger →</div>
+        </div>
+
+      </div>
+
+      <!-- ── MEDICINE FORM ── -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="section-tag" style="margin-bottom:4px;">Add / Update</div>
+            <div class="card-title">Medicine Information</div>
+          </div>
+          <div class="card-icon" style="background:rgba(0,201,167,0.1);">💊</div>
+        </div>
+        <div class="card-body">
+          <form id="medForm" action="#" method="post">
+            {% csrf_token %}
+            <div class="grid md:grid-cols-3 gap-5">
+
+              <!-- Medicine Name -->
+              <div>
+                <label class="field-label" for="name">Medicine Name</label>
+                <input id="name" list="medicineNames" required placeholder="e.g. Paracetamol" class="field-input" />
+              </div>
+
+              <!-- Composition -->
+              <div style="position:relative;">
+                <label class="field-label" for="composition">Composition</label>
+                <input id="composition" placeholder="e.g. Paracetamol 500mg" class="field-input" />
+                <div id="compositionSuggestions" class="hidden"></div>
+              </div>
+
+              <!-- Manufacture Date -->
+              <div>
+                <label class="field-label" for="mfgDate">Manufacture Date</label>
+                <input id="mfgDate" type="month" min="2014-01" max="2034-12" class="field-input" />
+              </div>
+
+              <!-- Expiry + Prices row -->
+              <div class="md:col-span-3 grid md:grid-cols-4 gap-5 items-end">
+                <div>
+                  <label class="field-label" for="expDate">Expiry Date</label>
+                  <input id="expDate" type="month" required min="2014-01" max="2034-12" class="field-input" />
+                </div>
+                <div class="md:col-span-3">
+
+                  <div class="grid grid-cols-3 gap-4">
+                    <div>
+                      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:5px;font-weight:500;">MRP</div>
+                      <input id="mrp" type="number" step="0.01" min="0" placeholder="0.00" class="field-input" />
+                    </div>
+                    <div>
+                      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:5px;font-weight:500;">Buy Price
+                      </div>
+                      <input id="buyPrice" type="number" step="0.01" min="0" placeholder="0.00" class="field-input" />
+                    </div>
+                    <div>
+                      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:5px;font-weight:500;">Sell Price
+                      </div>
+                      <input id="sellPrice" type="number" step="0.01" min="0" placeholder="0.00" class="field-input" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Type + Stock -->
+              <!-- Type -->
+              <div>
+                <label class="field-label" for="type">Type</label>
+                <select id="type" class="field-input" onchange="updatePackOptions()">
+                  <option value="">— Select type —</option>
+                  <option value="Tablet">Tablet</option>
+                  <option value="Capsule">Capsule</option>
+                  <option value="Syrup">Syrup</option>
+                  <option value="Injection">Injection</option>
+                  <option value="Ointment">Ointment</option>
+                  <option value="Drops">Drops</option>
+                  <option value="Powder">Powder</option>
+                  <option value="Inhaler">Inhaler</option>
+                  <option value="Patch">Patch</option>
+                </select>
+              </div>
+
+              <!-- Pack (dynamic) -->
+              <div>
+                <label class="field-label" for="pack">Pack</label>
+                <input id="pack" list="packOptions" placeholder="e.g. 15 tab" class="field-input" />
+              </div>
+
+              <!-- Place of Pack -->
+              <div>
+                <label class="field-label" for="place">Place</label>
+                <input id="place" placeholder="e.g. Shelf A, Drawer 3" class="field-input" />
+              </div>
+
+              <div>
+                <label class="field-label" for="stock">Stock</label>
+                <input id="stock" type="number" min="0" placeholder="0" class="field-input" />
+              </div>
+
+              <!-- Save / Reset -->
+              <div style="display:flex;align-items:flex-end;gap:10px;">
+                <button type="button" id="saveBtn" class="btn-brand" style="width:100%;padding:11px;">
+                  💾 Save Medicine
+                </button>
+                <button type="button" id="resetBtn" class="btn-muted" style="padding:11px 16px;">♻️</button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ── ACTION BAR ── -->
+      <div class="card">
+        <div class="card-body" style="padding: 14px 20px;">
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+            <div class="search-wrap">
+              <span class="search-icon">🔍</span>
+              <input id="search" class="search-input" placeholder="Search by name or composition…" />
+            </div>
+            <button class="btn-muted" type="button" id="resetSearchBtn">Reset</button>
+            <button class="btn-indigo" id="importFileBtn" type="button" title="Import from Excel or CSV">📤
+              Import</button>
+            <input id="importFileInput" type="file" accept=".xlsx,.xls,.csv" class="hidden" />
+            <button class="btn-brand" id="exportBtn" type="button" title="Export to Excel">📊 Export</button>
+            <button class="btn-danger" id="clearBtn" type="button" title="Clear all">🗑️ Clear All</button>
+          </div>
+
+          <div style="margin-top:12px;display:flex;align-items:center;gap:16px;font-size:0.78rem;color:var(--muted);">
+            <span>Sorted by expiry date (soonest first)</span>
+            <span style="display:flex;align-items:center;gap:4px;">
+              <span class="legend-dot" style="background:#EF4444;"></span>Expired
+            </span>
+            <span style="display:flex;align-items:center;gap:4px;">
+              <span class="legend-dot" style="background:#F59E0B;"></span>Expiring within 5 months
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MEDICINES TABLE ── -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="section-tag" style="margin-bottom:4px;">Inventory</div>
+            <div class="card-title">Registered Medicines</div>
+          </div>
+          <a href="/total-medicines.html"
+            style="font-size:0.8rem;font-weight:600;color:var(--brand);text-decoration:none;">
+            View all →
+          </a>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Composition</th>
+                <th>Pack</th>
+                <th>Mfg Date</th>
+                <th>Exp Date</th>
+                <th>MRP</th>
+                <th>Buy</th>
+                <th>Sell</th>
+                <th>Stock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="medList" class="text-gray-800"></tbody>
+          </table>
+        </div>
+
+        <p id="noData" class="text-center py-10 hidden" style="color:var(--muted);font-size:0.9rem;">
+          No medicines found. Add your first medicine above.
+        </p>
+      </div>
+
+    </div><!-- end main content -->
+
+    <!-- FOOTER -->
+    <footer class="mt-6">
+      <div class="max-w-6xl mx-auto px-6 pt-14 pb-10 grid md:grid-cols-4 gap-10">
+        <div>
+          <div
+            style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;letter-spacing:-0.03em;margin-bottom:10px;">
+            Pharma<span style="color:var(--brand)">Care</span>
+          </div>
+          <p style="color:rgba(255,255,255,0.35);font-size:0.85rem;line-height:1.7;">
+            PharmaCare is a complete medicine management system for pharmacists and healthcare professionals.
+          </p>
+        </div>
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Quick Links</div>
+          <ul class="space-y-3">
+            <li><a href="/">Home</a></li>
+            <li><a href="/dashboard.html">Dashboard</a></li>
+            <li><a href="/registration.html">Registration</a></li>
+            <li><a href="/login.html">Login</a></li>
+            <li><a href="/profile.html">Profile</a></li>
+          </ul>
+        </div>
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Support</div>
+          <ul class="space-y-3">
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Use</a></li>
+          </ul>
+        </div>
+        <div>
+          <div
+            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">
+            Contact</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="mailto:support@pharmacare.com"
+              style="color:var(--brand);font-size:0.875rem;">support@pharmacare.com</a>
+            <span style="color:rgba(255,255,255,0.35);font-size:0.85rem;">+91 9135687150</span>
+            <span style="color:rgba(255,255,255,0.35);font-size:0.85rem;">Siwan, India</span>
+          </div>
+        </div>
+      </div>
+      <div
+        style="border-top:1px solid rgba(255,255,255,0.07);padding:18px 24px;text-align:center;color:rgba(255,255,255,0.25);font-size:0.8rem;">
+        © <span id="year"></span> PharmaCare. All rights reserved.
+      </div>
+    </footer>
+
+  </div><!-- end #page -->
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // ── SIDEBAR TOGGLE ──
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuBtn = document.getElementById("menu-btn");
+      const sidebar = document.getElementById("sidebar");
+      const backdrop = document.getElementById("sidebar-backdrop") || document.getElementById("sidebarOverlay");
+      const page = document.getElementById("page");
+
+      function openSidebar() {
+        sidebar.classList.remove("-translate-x-full");
+        if (backdrop) backdrop.classList.add("visible");
+        if (page && window.innerWidth >= 768) page.classList.add("ml-64");
+        if (menuBtn) menuBtn.classList.add("open");
+      }
+
+      function closeSidebar() {
+        sidebar.classList.add("-translate-x-full");
+        if (backdrop) backdrop.classList.remove("visible");
+        if (page && window.innerWidth >= 768) page.classList.remove("ml-64");
+        if (menuBtn) menuBtn.classList.remove("open");
+      }
+
+      if (menuBtn) {
+        menuBtn.addEventListener("click", function () {
+          sidebar.classList.contains("-translate-x-full") ? openSidebar() : closeSidebar();
+        });
+      }
+
+      if (backdrop) {
+        backdrop.addEventListener("click", closeSidebar);
+      }
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeSidebar();
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth >= 768 && backdrop) {
+          backdrop.classList.remove("visible");
+        }
+      });
+    });
+
+
+
+    // ── AUTH CHECK + ORG NAME ──
+    async function checkAuth() {
+      try {
+        const response = await fetch('/profile_api', { credentials: 'include' });
+        if (!response.ok) {
+          localStorage.removeItem('meditrack_logged_in');
+          window.location.href = 'login.html';
+          return;
+        }
+        if (!localStorage.getItem('meditrack_logged_in')) {
+          localStorage.setItem('meditrack_logged_in', 'true');
+        }
+        try {
+          const data = await response.json();
+          const user = data.user || {};
+          const orgNameEl = document.getElementById('orgName');
+          if (orgNameEl) orgNameEl.textContent = user.org || user.name || 'OM MEDICAL STORE';
+        } catch (e) {
+          console.warn('Failed to parse profile response:', e);
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        localStorage.removeItem('meditrack_logged_in');
+        window.location.href = 'login.html';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', checkAuth);
+
+    // ── BILLING BUTTON ──
+    const billingBtn = document.getElementById('billing-btn');
+    if (billingBtn) {
+      billingBtn.addEventListener('click', () => { window.location.href = 'billing.html'; });
+    }
+
+
+    const packOptionsByType = {
+      Tablet: ["1×10 ", "1×15","1×20","1×30","1×4","1×8"],
+      Capsule: ["1×10 ", "1×15","1×20","1×30","1×4","1×8"],
+      Syrup: ["1×1 ", "1×2","1×5"],
+      Injection: ["1×5","1×1","1×10"],
+      Ointment: ["1×1"],
+      Drops: ["1×1"],
+      Powder: ["1×1"],
+      Inhaler: ["1×1"],
+      Patch: ["1×1"],
+    };
+
+    function updatePackOptions() {
+      const type = document.getElementById('type').value;
+      const packList = document.getElementById('packOptions');
+      const packInput = document.getElementById('pack');
+
+      packList.innerHTML = '';
+
+      if (!type || !packOptionsByType[type]) {
+        packInput.placeholder = 'e.g. 15 tab';
+        return;
+      }
+
+      packInput.placeholder = 'Select or type...';
+
+      packOptionsByType[type].forEach(opt => {
+        const el = document.createElement('option');
+        el.value = opt;
+        packList.appendChild(el);
+      });
+    }
+  </script>
+
+  <script src="{% static 'js/medicine-name.js' %}"></script>
+  <script src="{% static 'js/medicine-composition-name.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+
+  <datalist id="medicineNames"></datalist>
+  <datalist id="compositionNames"></datalist>
+  <datalist id="packOptions"></datalist>
+  <datalist id="typeNames">
+    <option value="Tablet">
+    <option value="Injection">
+    <option value="Syrup">
+    <option value="Ointment">
+  </datalist>
+
+
+</body>
+
+</html>
