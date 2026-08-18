@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import *
-from inventory.views import expired_medicines, soon_expiring, soon_expiring_page, expired_medicines as expired_medicines_api
+from Pharmacare.inventory.views import expired_medicines, soon_expiring, soon_expiring_page, expired_medicines as expired_medicines_api
 from . import views
 
 urlpatterns = [

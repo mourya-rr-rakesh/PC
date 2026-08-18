@@ -3,7 +3,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pharmacare.settings')
 import django
 django.setup()
 
-from accounts.models import User
+from Pharmacare.accounts.models import User
 from django.db.utils import IntegrityError
 
 admins = [

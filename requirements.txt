@@ -1,0 +1,4 @@
+Django
+openpyxl
+gunicorn
+whitenoise
