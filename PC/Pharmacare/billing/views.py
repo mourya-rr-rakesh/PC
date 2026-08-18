@@ -25,7 +25,7 @@ def billing_medicines(request):
         return auth
 
     meds = Medicine.objects.filter(user=request.user).values(
-        'id', 'name', 'mrp', 'stock'
+        'id', 'name', 'mrp', 'stock', 'pack'
     )
 
     data = []
@@ -35,6 +35,7 @@ def billing_medicines(request):
             'name': m['name'],
             'mrp': m['mrp'],
             'stock': m['stock']
+            , 'pack': m.get('pack', '')
         })
 
     return JsonResponse({'medicines': data})
@@ -57,7 +58,8 @@ def billing_medicine(request, id):
             '_id': m.id,
             'name': m.name,
             'mrp': m.mrp,
-            'stock': m.stock
+            'stock': m.stock,
+            'pack': m.pack
         }
     })
 
