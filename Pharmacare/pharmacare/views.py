@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 import json
-from Pharmacare.accounts.models import User
+from accounts.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie, csrf_exempt
@@ -117,6 +117,7 @@ def dashboard(request):
 def profile(request):
     return render(request, 'profile.html')
 
+@ensure_csrf_cookie
 def total_medicines(request):
     return render(request, 'total-medicines.html')
 
@@ -212,3 +213,75 @@ def admin_panel(request):
 def expired_medicines_page(request):
     """Render the expired medicines page"""
     return render(request, 'expired-medicine.html')
+
+
+import json
+import logging
+import requests
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.conf import settings
+
+
+@require_POST
+def ai_search(request):
+    try:
+        data = json.loads(request.body)
+        query = data.get("query", "").strip()
+
+        if not query:
+            return JsonResponse({
+                "error": "Query is required"
+            }, status=400)
+
+        api_key = getattr(settings, 'OPENROUTER_API_KEY', '')
+        if not api_key or api_key.startswith('replace-with-'):
+            return JsonResponse({"error": "AI service is not configured."}, status=503)
+
+        response = requests.post(
+            f"{settings.OPENROUTER_BASE_URL.rstrip('/')}/chat/completions",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+                "HTTP-Referer": "http://localhost",
+                "X-Title": "PharmaCare",
+            },
+            json={
+                "model": settings.OPENROUTER_MODEL,
+                "messages": [
+                    {
+                        "role": "system",
+                        "content": "You are a helpful medicine information assistant. "
+                                   "Give concise, factual answers and advise consulting a doctor."
+                    },
+                    {"role": "user", "content": query},
+                ],
+                "temperature": 0.2,
+            },
+            timeout=30,
+        )
+
+        if response.status_code >= 400:
+            logging.getLogger(__name__).error(
+                "OpenRouter request failed with status %s", response.status_code
+            )
+            return JsonResponse({"error": "AI service request failed."}, status=502)
+
+        payload = response.json()
+        answer = payload.get("choices", [{}])[0].get("message", {}).get("content")
+        if not isinstance(answer, str) or not answer.strip():
+            return JsonResponse({"error": "AI service returned an empty response."}, status=502)
+
+        return JsonResponse({
+            "answer": answer.strip()
+        })
+
+    except requests.exceptions.Timeout:
+        return JsonResponse({"error": "AI service timed out. Please try again."}, status=504)
+    except requests.exceptions.RequestException:
+        logging.getLogger(__name__).exception("OpenRouter request failed")
+        return JsonResponse({"error": "AI service is temporarily unavailable."}, status=503)
+    except (ValueError, KeyError, IndexError, TypeError):
+        return JsonResponse({
+            "error": "AI service returned an invalid response."
+        }, status=502)
