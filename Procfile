@@ -1,1 +1,1 @@
-web: cd Pharmacare && gunicorn pharmacare.wsgi --log-file -
+web: gunicorn --chdir Pharmacare pharmacare.wsgi:application --log-file -
