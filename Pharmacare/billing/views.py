@@ -5,7 +5,7 @@ from django.shortcuts import render
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from Pharmacare.inventory.models import Medicine
+from inventory.models import Medicine
 from .models import Invoice, InvoiceItem
 
 CURRENT_MARKUP_PERCENT = 0
