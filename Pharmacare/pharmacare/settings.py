@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parent.parent / '.env')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,14 +24,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY: read secret key from environment in production
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-ccso-6)!b$5tdbus)j$#^-a2*1exbvy_!ybjq-a_(7+6c-+m$8')
+def env_list(name, default=''):
+    return [value for value in os.environ.get(name, default).replace(',', ' ').split() if value]
+
+
+# SECURITY: production deployments must provide a real secret key.
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'local-development-only-key')
 
 # DEBUG controlled by env var (defaults to True for local dev)
 DEBUG = str(os.environ.get('DJANGO_DEBUG', 'True')).lower() in ('1', 'true', 'yes')
 
 # ALLOWED_HOSTS can be provided via space-separated env var
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1 localhost').split()
+ALLOWED_HOSTS = env_list(
+    'DJANGO_ALLOWED_HOSTS',
+    '127.0.0.1 localhost .vercel.app .onrender.com',
+)
+CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
 
 
 # Application definition
@@ -44,6 +56,8 @@ INSTALLED_APPS = [
     'inventory',
     'billing',
     'khatabook',
+    # 'ai_inventory',
+    # 'ai_search',
 ]
 
 MIDDLEWARE = [
@@ -80,25 +94,15 @@ WSGI_APPLICATION = 'pharmacare.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# Using SQLite for development (fast and easy setup)
+# Use the managed database supplied by Render/Vercel when configured, while
+# retaining SQLite as a local-development fallback.
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
-
-# PostgreSQL configuration (uncomment when PostgreSQL is set up)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'pharmacare_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'your_password_here',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
 
 
 # Password validation
@@ -136,9 +140,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
@@ -160,4 +162,14 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SECURE = False   
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = not DEBUG
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
+
+OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY', os.getenv('OPENAI_API_KEY', ''))
+OPENROUTER_BASE_URL = os.getenv('OPENROUTER_BASE_URL', 'https://openrouter.ai/api/v1')
+OPENROUTER_MODEL = os.getenv('OPENROUTER_MODEL', 'openai/gpt-4o-mini')

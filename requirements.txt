@@ -2,3 +2,7 @@ Django
 openpyxl
 gunicorn
 whitenoise
+requests
+python-dotenv
+dj-database-url
+psycopg[binary]

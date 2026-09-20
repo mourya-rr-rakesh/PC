@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import *
-from Pharmacare.inventory.views import expired_medicines, soon_expiring, soon_expiring_page, expired_medicines as expired_medicines_api
+from inventory.views import expired_medicines, soon_expiring, soon_expiring_page, expired_medicines as expired_medicines_api
 from . import views
 
 urlpatterns = [
@@ -50,10 +50,13 @@ urlpatterns = [
     path('admin/users', admin_users_api, name='admin_users_api'),
     path('admin/users/<str:email>', admin_delete_user, name='admin_delete_user'),
     path('admin/users/<str:email>/subscription', admin_update_subscription, name='admin_update_subscription'),
+    path('api/ai-search/', ai_search, name='ai_search'),
 
     # Include app URLs
     path('', include('accounts.urls')),
     path('', include('inventory.urls')),
     path('', include('billing.urls')),
     path('', include('khatabook.urls')),
+
+
 ]

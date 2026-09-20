@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "python Pharmacare/manage.py collectstatic --noinput",
   "builds": [
     {
       "src": "Pharmacare/api/index.py",
