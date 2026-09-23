@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'billing',
     'khatabook',
     # 'ai_inventory',
-    # 'ai_search',
+    'ai_search',
 ]
 
 MIDDLEWARE = [
@@ -170,6 +170,23 @@ SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
 SECURE_HSTS_PRELOAD = not DEBUG
 
-OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY', os.getenv('OPENAI_API_KEY', ''))
-OPENROUTER_BASE_URL = os.getenv('OPENROUTER_BASE_URL', 'https://openrouter.ai/api/v1')
-OPENROUTER_MODEL = os.getenv('OPENROUTER_MODEL', 'openai/gpt-4o-mini')
+OPENROUTER_API_KEY = os.getenv(
+    'OPENROUTER_API_KEY',
+    os.getenv('OPENAI_API_KEY', '')
+)
+
+OPENROUTER_BASE_URL = os.getenv(
+    'OPENROUTER_BASE_URL',
+    'https://openrouter.ai/api/v1'
+)
+
+OPENROUTER_MODEL = os.getenv(
+    'OPENROUTER_MODEL',
+    'openai/gpt-4o-mini'
+)
+
+# Gemini AI
+GEMINI_API_KEY = os.getenv(
+    'GEMINI_API_KEY',
+    ''
+)

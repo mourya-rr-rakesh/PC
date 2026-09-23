@@ -1,0 +1,88 @@
+{% load static %}
+
+<div class="ai-search-container">
+    <div class="ai-search-header">
+        <h2>AI Medicine Search</h2>
+        <p class="search-subtitle">Search any brand, generic name, tablet, syrup, or imperfect spelling</p>
+    </div>
+
+    <!-- Search Box -->
+    <div class="ai-search-box">
+        <input
+            type="text"
+            id="medicine-search"
+            placeholder="Search any medicine (e.g., Nicip, Crocin, Metformin, Dolo)..."
+            autocomplete="off"
+        >
+        <button id="search-button" type="button">
+            <span class="btn-text">Search</span>
+        </button>
+    </div>
+
+    <!-- Results Area -->
+    <div class="ai-search-results">
+        <!-- Status & Notification Banner -->
+        <div id="search-status-banner" class="search-status-banner" style="display: none;"></div>
+
+        <!-- External Medicine Information Card -->
+        <div id="external-medicine-card" class="external-medicine-card" style="display: none;">
+            <div class="card-header">
+                <div>
+                    <span class="card-tag">Identified Medicine</span>
+                    <h3 id="ext-medicine-name" class="ext-medicine-name"></h3>
+                </div>
+                <span id="ext-source-badge" class="source-badge"></span>
+            </div>
+
+            <div class="card-body">
+                <div class="detail-row">
+                    <span class="detail-label">Composition / Active Ingredient:</span>
+                    <span id="ext-composition" class="detail-value composition-highlight"></span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Description & Common Uses:</span>
+                    <p id="ext-description" class="detail-value description-text"></p>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Age & Pediatric Information:</span>
+                    <p id="ext-age-info" class="detail-value age-text"></p>
+                </div>
+
+                <div id="ext-sources-container" class="detail-row sources-row" style="display: none;">
+                    <span class="detail-label">Authoritative Sources:</span>
+                    <div id="ext-sources-list" class="sources-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Local Inventory Matches Section -->
+        <div id="inventory-results-section" class="inventory-results-section" style="display: none;">
+            <div class="inventory-section-header">
+                <h4>Local Inventory Matches</h4>
+            </div>
+            <div class="table-wrapper">
+                <table class="medicine-table">
+                    <thead>
+                        <tr>
+                            <th>Medicine</th>
+                            <th>Composition</th>
+                            <th>Stock</th>
+                            <th>MRP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="medicine-results">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS -->
+<link rel="stylesheet" href="{% static 'ai_search/css/search.css' %}">
+
+<!-- JavaScript -->
+<script src="{% static 'ai_search/js/searrch.js' %}"></script>

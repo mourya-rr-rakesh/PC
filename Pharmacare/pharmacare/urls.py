@@ -51,6 +51,7 @@ urlpatterns = [
     path('admin/users/<str:email>', admin_delete_user, name='admin_delete_user'),
     path('admin/users/<str:email>/subscription', admin_update_subscription, name='admin_update_subscription'),
     path('api/ai-search/', ai_search, name='ai_search'),
+    path('ai/', include('ai_search.urls')),
 
     # Include app URLs
     path('', include('accounts.urls')),

@@ -1,0 +1,335 @@
+/* medicines/static/medicines/css/ai_search.css
+   Styling for the AI Medicine Search button + modal.
+
+   Scoped under .ai-search-* / #ai-search-* so it won't collide with
+   your existing page styles. If your project already uses Bootstrap,
+   these rules are still safe to include alongside it — nothing here
+   overrides global selectors.
+*/
+
+:root {
+  --ai-search-accent: #146c5e;      /* deep teal — clinical, not decorative */
+  --ai-search-accent-soft: #e4f2ef;
+  --ai-search-ink: #16211f;
+  --ai-search-muted: #5b6b68;
+  --ai-search-border: #dfe6e4;
+  --ai-search-surface: #ffffff;
+  --ai-search-danger: #a5342a;
+  --ai-search-danger-soft: #fbeceb;
+  --ai-search-radius: 10px;
+}
+
+/* Trigger button, sits next to the existing search input */
+.ai-search-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.55em 0.9em;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ai-search-accent);
+  background: var(--ai-search-accent-soft);
+  border: 1px solid transparent;
+  border-radius: var(--ai-search-radius);
+  cursor: pointer;
+  transition: background-color 120ms ease, transform 80ms ease;
+}
+
+.ai-search-trigger-btn:hover {
+  background: #d5ebe6;
+}
+
+.ai-search-trigger-btn:active {
+  transform: translateY(1px);
+}
+
+.ai-search-trigger-btn:focus-visible {
+  outline: 2px solid var(--ai-search-accent);
+  outline-offset: 2px;
+}
+
+/* Overlay */
+.ai-search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 23, 22, 0.45);
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+.ai-search-overlay.is-open {
+  opacity: 1;
+}
+
+.ai-search-overlay[hidden] {
+  display: none;
+}
+
+/* Modal card */
+.ai-search-modal {
+  width: 100%;
+  max-width: 440px;
+  max-height: min(600px, 90vh);
+  display: flex;
+  flex-direction: column;
+  background: var(--ai-search-surface);
+  border-radius: var(--ai-search-radius);
+  box-shadow: 0 12px 32px rgba(16, 30, 27, 0.22);
+  transform: translateY(8px) scale(0.98);
+  opacity: 0;
+  transition: transform 140ms ease, opacity 140ms ease;
+  overflow: hidden;
+}
+
+.ai-search-overlay.is-open .ai-search-modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.ai-search-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--ai-search-border);
+}
+
+.ai-search-modal__header h2 {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--ai-search-ink);
+}
+
+.ai-search-modal__close {
+  border: none;
+  background: transparent;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--ai-search-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.ai-search-modal__close:hover {
+  background: var(--ai-search-accent-soft);
+  color: var(--ai-search-ink);
+}
+
+.ai-search-modal__body {
+  padding: 16px 18px;
+  overflow-y: auto;
+}
+
+.ai-search-modal__footer {
+  padding: 12px 18px 16px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--ai-search-border);
+}
+
+/* Fields */
+.ai-search-field {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.ai-search-field__label {
+  font-size: 0.8rem;
+  color: var(--ai-search-muted);
+}
+
+.ai-search-field__value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ai-search-ink);
+}
+
+/* Status / loading */
+.ai-search-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  color: var(--ai-search-muted);
+  font-size: 0.92rem;
+}
+
+.ai-search-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--ai-search-border);
+  border-top-color: var(--ai-search-accent);
+  animation: ai-search-spin 700ms linear infinite;
+  flex: none;
+}
+
+@keyframes ai-search-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-search-spinner { animation-duration: 1400ms; }
+  .ai-search-overlay, .ai-search-modal { transition: none; }
+}
+
+/* Result sections */
+.ai-search-section {
+  margin-top: 16px;
+}
+
+.ai-search-section h3 {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ai-search-ink);
+}
+
+.ai-search-composition-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ai-search-composition-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  background: #f6f8f7;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--ai-search-ink);
+}
+
+.ai-search-composition-list li .strength {
+  color: var(--ai-search-muted);
+  font-weight: 600;
+}
+
+.ai-search-meta {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--ai-search-muted);
+}
+
+.ai-search-meta div + div {
+  margin-top: 2px;
+}
+
+/* Matches list */
+.ai-search-matches-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-search-match-card {
+  padding: 10px 12px;
+  border: 1px solid var(--ai-search-border);
+  border-radius: 8px;
+}
+
+.ai-search-match-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ai-search-match-card__name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--ai-search-ink);
+}
+
+.ai-search-match-card__composition {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: var(--ai-search-muted);
+}
+
+.ai-search-badge {
+  flex: none;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--ai-search-accent-soft);
+  color: var(--ai-search-accent);
+}
+
+.ai-search-badge--low {
+  background: #f2f1e8;
+  color: #7a6e3d;
+}
+
+/* Notices / errors */
+.ai-search-notice {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f6f8f7;
+  color: var(--ai-search-muted);
+  font-size: 0.88rem;
+}
+
+.ai-search-error {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--ai-search-danger-soft);
+  color: var(--ai-search-danger);
+  font-size: 0.88rem;
+}
+
+.ai-search-disclaimer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--ai-search-border);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--ai-search-muted);
+}
+
+/* Footer buttons */
+.ai-search-btn {
+  padding: 0.55em 1.1em;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--ai-search-border);
+}
+
+.ai-search-btn--secondary {
+  background: var(--ai-search-surface);
+  color: var(--ai-search-ink);
+}
+
+.ai-search-btn--secondary:hover {
+  background: #f6f8f7;
+}
+
+/* Small screens */
+@media (max-width: 420px) {
+  .ai-search-modal {
+    max-width: 100%;
+  }
+}

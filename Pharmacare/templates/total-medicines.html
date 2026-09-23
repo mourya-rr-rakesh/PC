@@ -249,15 +249,18 @@
       gap: 12px;
       align-items: center;
       flex-wrap: wrap;
+      position: relative;
     }
 
-    .search-wrap {
-      position: relative;
-      flex: 1;
-      min-width: 240px;
-    }
+   .search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
 
     .search-input {
+      flex: 1;
       width: 100%;
       padding: 10px 38px 10px 14px;
       border: 1.5px solid rgba(10, 15, 30, 0.12);
@@ -294,6 +297,7 @@
       padding: 2px 4px;
       border-radius: 4px;
       transition: color 0.15s;
+      flex: 0 0 auto;
     }
 
     .search-clear:hover {
@@ -532,6 +536,181 @@
         letter-spacing: 0.06em;
       }
     }
+/* ==============================
+   SEARCH AREA
+   ============================== */
+
+.ai-search-btn {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    flex-shrink: 0;
+
+    border: 1px solid rgba(14, 165, 233, 0.25);
+    border-radius: 10px;
+
+    background: rgba(14, 165, 233, 0.08);
+    color: #0284C7;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    font-size: 17px;
+
+    transition: all 0.2s;
+}
+
+.ai-search-btn:hover {
+    background: rgba(14, 165, 233, 0.15);
+    transform: translateY(-1px);
+}
+
+
+/* Small popup */
+
+.ai-search-box {
+    position: absolute;
+
+    top: 72px;
+    right: 20px;
+
+    width: 320px;
+
+    padding: 12px;
+
+    background: #fff;
+
+    border: 1px solid #e1eaf3;
+    border-radius: 12px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+
+    display: none;
+
+    z-index: 1000;
+}
+
+.ai-search-box.active {
+    display: block;
+}
+
+.ai-search-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0F172A;
+
+    margin-bottom: 8px;
+}
+
+.ai-search-row {
+    display: flex;
+    gap: 7px;
+}
+
+.ai-search-row input {
+    flex: 1;
+    min-width: 0;
+
+    height: 36px;
+
+    padding: 0 10px;
+
+    border: 1px solid #d8e3ee;
+    border-radius: 8px;
+
+    outline: none;
+
+    font-size: 13px;
+}
+
+.ai-search-row input:focus {
+    border-color: #0EA5E9;
+}
+
+.ai-search-row button {
+    height: 36px;
+
+    padding: 0 12px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #0EA5E9;
+    color: white;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.ai-search-row button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.ai-search-status {
+    margin-top: 8px;
+
+    font-size: 11px;
+    color: #64748B;
+}
+
+.ai-search-status.error {
+    color: #DC2626;
+}
+
+
+.ai-search-result {
+    display: none;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    text-align: left;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.ai-search-result.show {
+    display: block;
+}
+
+.ai-result-item {
+    margin-bottom: 9px;
+}
+
+.ai-result-item:last-child {
+    margin-bottom: 0;
+}
+
+.ai-result-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    letter-spacing: 0.04em;
+}
+
+.ai-result-value {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #0F172A;
+    word-break: break-word;
+}
+
+.ai-result-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+
+
+
   </style>
 </head>
 
@@ -602,16 +781,69 @@
     <!-- MAIN -->
     <main class="max-w-screen-xl mx-auto px-6 py-6 space-y-5">
 
-      <!-- SEARCH BAR -->
-      <div class="search-card">
-        <div class="search-wrap">
-          <input id="totalSearch" type="search" class="search-input"
-            placeholder="Search by name, type or composition…" />
-          <button id="clearSearch" class="search-clear" title="Clear">✕</button>
-        </div>
-        <div class="search-count" id="searchCount">Showing all medicines</div>
-      </div>
+   <div class="search-card">
 
+    <div class="search-wrap">
+
+        <!-- Normal Search -->
+        <input
+            id="totalSearch"
+            type="search"
+            class="search-input"
+            placeholder="Search by name, type or composition…"
+        />
+
+        <button
+            id="clearSearch"
+            class="search-clear"
+            title="Clear">
+            ✕
+        </button>
+
+        <!-- Small AI Button -->
+        <button
+            id="aiSearchBtn"
+            class="ai-search-btn"
+            type="button"
+            title="AI Search">
+            ✨
+        </button>
+
+    </div>
+
+    <div class="search-count" id="searchCount">
+        Showing all medicines
+    </div>
+
+    <!-- Small AI popup -->
+    <div id="aiSearchBox" class="ai-search-box">
+
+        <div class="ai-search-title">
+            ✨ AI Medicine Search
+        </div>
+
+        <div class="ai-search-row">
+
+            <input
+                id="aiSearchInput"
+                type="text"
+                placeholder="e.g. Crocin"
+            />
+
+            <button
+                id="aiSearchSubmit"
+                type="button">
+                Search
+            </button>
+
+        </div>
+
+        <div id="aiSearchStatus" class="ai-search-status"></div>
+       <div id="aiSearchResult" class="ai-search-result"></div> 
+
+    </div>
+
+</div>
       <!-- TABLE CARD -->
       <div class="card">
         <div class="card-header">
@@ -776,7 +1008,222 @@
         ? (visible === total ? `Showing all ${total} medicines` : `Showing ${visible} of ${total} medicines`)
         : '';
     }
+const aiSearchBtn = document.getElementById("aiSearchBtn");
+const aiSearchBox = document.getElementById("aiSearchBox");
+const aiSearchInput = document.getElementById("aiSearchInput");
+const aiSearchSubmit = document.getElementById("aiSearchSubmit");
+const aiSearchStatus = document.getElementById("aiSearchStatus");
+const aiSearchResult = document.getElementById("aiSearchResult");
+const totalSearch = document.getElementById("totalSearch");
 
+
+// ✨ AI button click
+aiSearchBtn.addEventListener("click", function () {
+
+    // Normal search ka text AI box me copy
+    if (totalSearch.value.trim()) {
+        aiSearchInput.value = totalSearch.value.trim();
+    }
+
+    // Popup open / close
+    aiSearchBox.classList.toggle("active");
+
+    if (aiSearchBox.classList.contains("active")) {
+        aiSearchInput.focus();
+    }
+});
+
+
+// 🔎 AI Search API
+async function runAISearch() {
+
+    const query = aiSearchInput.value.trim();
+
+    if (!query) {
+        aiSearchInput.focus();
+        return;
+    }
+
+    aiSearchSubmit.disabled = true;
+    aiSearchSubmit.innerText = "Searching...";
+
+    aiSearchStatus.className = "ai-search-status";
+    aiSearchStatus.innerText = "Finding medicine information...";
+
+    // Old result clear
+    aiSearchResult.innerHTML = "";
+    aiSearchResult.classList.remove("show");
+
+    try {
+
+        const response = await fetch("/ai/api/search/", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+
+            credentials: "include",
+
+            body: JSON.stringify({
+                query: query
+            })
+        });
+
+
+        const data = await response.json();
+
+        console.log("AI Search Response:", data);
+
+
+        if (!response.ok) {
+            throw new Error(
+                data.error || "AI search failed."
+            );
+        }
+
+
+        const info = data.external_info || {};
+        const localMatches = Array.isArray(data.inventory_matches)
+          ? data.inventory_matches
+          : [];
+
+        if (localMatches.length === 0 && !info.found) {
+
+            aiSearchStatus.className =
+                "ai-search-status error";
+
+            aiSearchStatus.innerText =
+                info.error || "Medicine could not be reliably identified from available external sources.";
+
+              renderAiSearchResult([], info);
+
+            return;
+        }
+
+        aiSearchStatus.className =
+            "ai-search-status";
+
+            aiSearchStatus.innerText = localMatches.length
+              ? (info.found ? "Local inventory and verified external information found." : "Local inventory found. External information was unavailable.")
+              : "Medicine information found from verified external sources.";
+
+            renderAiSearchResult(localMatches, info);
+    } catch (error) {
+
+        console.error("AI Search Error:", error);
+
+        aiSearchStatus.className =
+            "ai-search-status error";
+
+        aiSearchStatus.innerText =
+            error.message || "AI search failed.";
+
+    } finally {
+
+        aiSearchSubmit.disabled = false;
+        aiSearchSubmit.innerText = "Search";
+    }
+}
+
+function renderAiSearchResult(localMatches, info) {
+  const value = (text) => escapeHtml(text || "Not available");
+  const localHtml = localMatches.length
+    ? `<div class="ai-result-item"><div class="ai-result-label">Local Inventory</div>${localMatches.map(m => `
+      <div class="ai-result-value" style="margin-bottom:8px;">
+        <strong>${value(m.medicine_name)}</strong><br>
+        Composition: ${value(m.composition)}<br>
+        Stock: ${value(m.stock)} &nbsp; MRP: ₹${value(Number(m.mrp || 0).toFixed(2))}<br>
+        Medicine ID: ${value(m.medicine_id)}
+      </div>`).join("")}</div>`
+    : `<div class="ai-result-item"><div class="ai-result-label">Local Inventory</div><div class="ai-result-value">No matching medicine in local inventory.</div></div>`;
+
+  const sourceHtml = Array.isArray(info.sources) && info.sources.length
+    ? `<div class="ai-result-item"><div class="ai-result-label">Verified Sources</div>${info.sources.map(source => {
+      const url = String(source.url || "");
+      if (!/^https?:\/\//i.test(url)) return "";
+      return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="ai-result-value" style="display:block;color:#0284C7;margin-bottom:4px;">${value(source.title || url)}</a>`;
+    }).join("")}</div>`
+    : "";
+
+  const externalHtml = info.found ? `<div class="ai-result-item" style="border-top:1px solid #E2E8F0;padding-top:10px;">
+    <div class="ai-result-label">External Medicine Information</div>
+    <div class="ai-result-value ai-result-name">${value(info.medicine_name)}</div>
+    <div class="ai-result-value">Generic / Composition: ${value(info.composition)}</div>
+    <div class="ai-result-value">Strength: ${value(info.strength)}</div>
+    <div class="ai-result-value">Dosage form: ${value(info.dosage_form)}</div>
+    <div class="ai-result-value">Description: ${value(info.description)}</div>
+    <div class="ai-result-value">Common uses: ${value(info.common_uses)}</div>
+    <div class="ai-result-value">Age information: ${value(info.age_information)}</div>
+    <div class="ai-result-value">Warnings: ${value(info.warnings)}</div>
+    </div>${sourceHtml}` : "";
+
+  aiSearchResult.innerHTML = localHtml + externalHtml;
+  aiSearchResult.classList.add("show");
+}
+
+
+// Search button
+aiSearchSubmit.addEventListener(
+    "click",
+    runAISearch
+);
+
+
+// Enter key
+aiSearchInput.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Enter") {
+            runAISearch();
+        }
+
+    }
+);
+
+
+// Escape HTML
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+
+// CSRF cookie
+function getCookie(name) {
+
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== "") {
+
+        const cookies = document.cookie.split(";");
+
+        for (let cookie of cookies) {
+
+            cookie = cookie.trim();
+
+            if (cookie.startsWith(name + "=")) {
+
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
     // Observe tbody mutations so count updates after JS populates the table
     const observer = new MutationObserver(updateCount);
     observer.observe(document.getElementById('totalMedList'), { childList: true, subtree: true });

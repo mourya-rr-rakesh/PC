@@ -1,0 +1,101 @@
+{# ---------------------------------------------------------------------
+   medicines/templates/medicines/ai_search_modal.html
+
+   Include this on the existing medicine search page with:
+
+       {% include "medicines/ai_search_modal.html" %}
+
+   Place the include anywhere in the page body (it's a hidden overlay
+   until opened by JS) — right after your existing search bar markup
+   is a natural spot. Also add the AI Search button next to your
+   existing search input (see the snippet at the bottom of this file).
+--------------------------------------------------------------------- #}
+{% load static %}
+
+<div id="ai-search-modal-overlay" class="ai-search-overlay" hidden>
+  <div
+    id="ai-search-modal"
+    class="ai-search-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="ai-search-modal-title"
+  >
+    <div class="ai-search-modal__header">
+      <h2 id="ai-search-modal-title">✨ AI Medicine Search</h2>
+      <button
+        type="button"
+        id="ai-search-modal-close"
+        class="ai-search-modal__close"
+        aria-label="Close"
+      >&times;</button>
+    </div>
+
+    <div class="ai-search-modal__body">
+      <div class="ai-search-field">
+        <span class="ai-search-field__label">Medicine</span>
+        <span id="ai-search-medicine-name" class="ai-search-field__value"></span>
+      </div>
+
+      <div id="ai-search-status" class="ai-search-status" aria-live="polite">
+        <span class="ai-search-spinner" aria-hidden="true"></span>
+        <span id="ai-search-status-text">Finding medicine information...</span>
+      </div>
+
+      <div id="ai-search-result" class="ai-search-result" hidden>
+
+        <section id="ai-search-composition-section" class="ai-search-section" hidden>
+          <h3>AI-detected composition</h3>
+          <ul id="ai-search-composition-list" class="ai-search-composition-list"></ul>
+
+          <div id="ai-search-meta" class="ai-search-meta"></div>
+        </section>
+
+        <section id="ai-search-matches-section" class="ai-search-section" hidden>
+          <h3>Possible Database Matches</h3>
+          <ul id="ai-search-matches-list" class="ai-search-matches-list"></ul>
+        </section>
+
+        <p id="ai-search-empty-notice" class="ai-search-notice" hidden></p>
+
+        <p class="ai-search-disclaimer">
+          Composition similarity does not confirm therapeutic equivalence.
+          Verify with a qualified healthcare professional.
+        </p>
+      </div>
+
+      <p id="ai-search-error" class="ai-search-error" hidden></p>
+    </div>
+
+    <div class="ai-search-modal__footer">
+      <button type="button" id="ai-search-modal-close-btn" class="ai-search-btn ai-search-btn--secondary">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+{# ---------------------------------------------------------------------
+   Config passed to JS: the endpoint URL, generated via {% url %} so
+   nothing is hardcoded in ai_search.js.
+--------------------------------------------------------------------- #}
+<script>
+  window.AI_SEARCH_CONFIG = {
+    endpointUrl: "{% url 'medicines:ai_medicine_search' %}"
+  };
+</script>
+
+{# ---------------------------------------------------------------------
+   BUTTON SNIPPET — copy this next to your EXISTING search input,
+   inside your existing search page template (not this file).
+   Adjust #existing-medicine-search-input to your real input's ID.
+   ---------------------------------------------------------------------
+
+   <input type="text" id="existing-medicine-search-input" ... >
+   <button type="button" id="ai-search-trigger-btn" class="ai-search-trigger-btn">
+     ✨ AI Search
+   </button>
+
+--------------------------------------------------------------------- #}
+
+<link rel="stylesheet" href="{% static 'medicines/css/ai_search.css' %}">
+<script src="{% static 'medicines/js/ai_search.js' %}" defer></script>
