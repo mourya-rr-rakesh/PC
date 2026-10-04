@@ -2,7 +2,6 @@ import json
 import logging
 from datetime import date
 
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
@@ -17,9 +16,14 @@ from .predictor import (
 logger = logging.getLogger(__name__)
 
 
-@login_required(login_url="/login.html")
 @require_POST
 def supervised_medicine_search(request):
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"error": "Your session has expired. Please log in again."},
+            status=401,
+        )
+
     try:
         payload = json.loads(request.body)
     except (json.JSONDecodeError, UnicodeDecodeError):

@@ -18,6 +18,21 @@ class SupervisedMedicineSearchTests(TestCase):
         self.client.force_login(self.user)
         self.search_url = reverse("supervised_medicine_search")
 
+    def test_requires_authentication_with_json_response(self):
+        self.client.logout()
+
+        response = self.client.post(
+            self.search_url,
+            data='{"query": "Paracetamol"}',
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(
+            response.json(),
+            {"error": "Your session has expired. Please log in again."},
+        )
+
     @patch(
         "ai_search.views.supervised_medicine_predictor.predict",
         return_value={

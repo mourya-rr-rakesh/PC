@@ -1210,17 +1210,35 @@ async function runAISearch() {
         });
 
 
-        const data = await response.json();
+        const responseBody = await response.text();
+        let data;
+        try {
+            data = responseBody ? JSON.parse(responseBody) : null;
+        } catch {
+            if (
+                response.redirected &&
+                new URL(response.url).pathname === "/login.html"
+            ) {
+                throw new Error("Your session has expired. Please log in again.");
+            }
+
+            throw new Error(
+                `AI search returned an invalid response (HTTP ${response.status}). Please try again.`
+            );
+        }
 
         console.log("AI Search Response:", data);
 
 
         if (!response.ok) {
             throw new Error(
-                data.error || "AI search failed."
+                data?.error || `AI search failed (HTTP ${response.status}).`
             );
         }
 
+        if (!data || typeof data !== "object") {
+            throw new Error("AI search returned an empty response. Please try again.");
+        }
 
         const prediction = data.supervised_prediction || {};
         const localMatches = Array.isArray(data.inventory_matches)
