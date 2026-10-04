@@ -1,0 +1,266 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Django pharmacy app",
+			"type": "shell",
+			"command": "C:\\Users\\rakes\\Downloads\\pharmacy_supervised_ml_app\\.venv\\Scripts\\python.exe",
+			"args": [
+				"manage.py",
+				"runserver",
+				"0.0.0.0:8001"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}\\pharmacy_project"
+			},
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Train therapeutic class model",
+			"type": "shell",
+			"command": "C:\\Users\\rakes\\Downloads\\pharmacy_supervised_ml_app\\.venv\\Scripts\\python.exe",
+			"args": [
+				"C:\\Users\\rakes\\Downloads\\pharmacy_supervised_ml_app\\pharmacy_project\\train_supervised.py",
+				"--data",
+				"C:\\Users\\rakes\\OneDrive\\Desktop\\ProgramingMaterial\\PC\\dataset0\\all_medicine databased.csv",
+				"--target",
+				"Therapeutic Class",
+				"--output",
+				"therapeutic_class_model.pkl"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Restore composition model",
+			"type": "shell",
+			"command": "C:\\Users\\rakes\\Downloads\\pharmacy_supervised_ml_app\\.venv\\Scripts\\python.exe",
+			"args": [
+				"C:\\Users\\rakes\\Downloads\\pharmacy_supervised_ml_app\\pharmacy_project\\train_supervised.py",
+				"--data",
+				"C:\\Users\\rakes\\OneDrive\\Desktop\\ProgramingMaterial\\PC\\dataset3\\indian_pharmaceutical_products_clean.csv",
+				"--name-column",
+				"brand_name",
+				"--target",
+				"active_ingredients",
+				"--algorithm",
+				"knn",
+				"--output",
+				"supervised_model.pkl"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Django app",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"pharmacy_project/manage.py",
+				"runserver",
+				"0.0.0.0:8000"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Train ML model",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"pharmacy_project/train_supervised.py"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Inspect dataset columns",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"-c",
+				"import pandas as pd; df=pd.read_csv(r'dataset3\\indian_pharmaceutical_products_clean.csv'); print(df.columns.tolist()); print(df.head(2).to_string(index=False)); print('rows', len(df))"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Dataset inspect 2",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"-c",
+				"import pandas as pd; df=pd.read_csv('dataset3/indian_pharmaceutical_products_clean.csv'); print(df.columns.tolist()); print(df.head(2).to_string(index=False)); print('rows', len(df))"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Dataset inspect 3",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"-c",
+				"import pandas as pd; df = pd.read_csv(\"dataset3/indian_pharmaceutical_products_clean.csv\"); print(df.columns.tolist()); print(df.head(2).to_string(index=False)); print('rows', len(df))"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Dataset inspect 4",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"-c",
+				"import pandas as pd; df = pd.read_csv(\"dataset3/indian_pharmaceutical_products_clean.csv\"); print(df.columns.tolist()); print(df.head(2).to_string(index=False)); print(\"rows\", len(df))"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Train 4th dataset model",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"pharmacy_project/train_supervised.py",
+				"--data",
+				"dataset3/indian_pharmaceutical_products_clean.csv",
+				"--name-column",
+				"brand_name",
+				"--target",
+				"active_ingredients",
+				"--algorithm",
+				"knn",
+				"--output",
+				"supervised_model.pkl"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Run Django app on 8001",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"pharmacy_project/manage.py",
+				"runserver",
+				"0.0.0.0:8001"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Check model file",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"C:/Users/rakes/.copilot/session-state/98fd0258-4c6a-4eef-b83c-b9456880ecaa/files/check_model.py"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Test predictor direct",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"C:/Users/rakes/.copilot/session-state/98fd0258-4c6a-4eef-b83c-b9456880ecaa/files/test_predict.py"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Check predictor in app",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"pharmacy_project/manage.py",
+				"shell",
+				"-c",
+				"from inventory.ai_engine import SupervisedMLPredictor; p=SupervisedMLPredictor(); print('loaded', p.is_loaded); print(p.predict_and_find_substitutes('paracetamol')[0])"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Check runtime predictor",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"C:/Users/rakes/.copilot/session-state/98fd0258-4c6a-4eef-b83c-b9456880ecaa/files/check_runtime_predict.py"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Restart Django server for ML update",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"pharmacy_project/manage.py",
+				"runserver",
+				"0.0.0.0:8001"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Retrain model with algorithm metadata",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"pharmacy_project/train_supervised.py",
+				"--data",
+				"dataset3/indian_pharmaceutical_products_clean.csv",
+				"--name-column",
+				"brand_name",
+				"--target",
+				"active_ingredients",
+				"--algorithm",
+				"knn",
+				"--output",
+				"supervised_model.pkl"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Verify saved model metadata",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"-c",
+				"import pickle; f=open('pharmacy_project/supervised_model.pkl','rb'); data=pickle.load(f); print(data.keys()); print(data.get('algorithm')); print(data.get('target_column'));"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Verify pickle metadata",
+			"type": "shell",
+			"command": "c:/Users/rakes/Downloads/pharmacy_supervised_ml_app/.venv/Scripts/python.exe",
+			"args": [
+				"C:/Users/rakes/.copilot/session-state/98fd0258-4c6a-4eef-b83c-b9456880ecaa/files/check_saved_pickle.py"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class AiSearchConfig(AppConfig):
-    name = 'ai_search'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "ai_search"

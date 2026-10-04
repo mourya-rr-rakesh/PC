@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supervised ML - Medicine Composition Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .hero-section { background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white; padding: 40px 0; }
+        .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+
+<div class="hero-section text-center mb-4">
+    <h2>🤖 Supervised ML Medicine Search Engine</h2>
+    <p class="mb-0">Medicine ka naam do -> Model Active Composition Predict karega</p>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <form method="GET" action="" class="d-flex gap-2">
+                <input type="text" name="q" class="form-control form-control-lg" placeholder="Type any medicine name (e.g. Dolo 650, Crocin 500, Levocet)..." value="{{ query }}" required>
+                <button type="submit" class="btn btn-dark btn-lg px-4">Predict & Search</button>
+            </form>
+        </div>
+    </div>
+
+    {% if query %}
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card card-custom p-4 bg-white mb-4">
+                <h4 class="text-primary fw-bold">🔎 Input Query: "{{ query }}"</h4>
+                
+                {% if prediction_result %}
+                <div class="alert alert-info mt-3 border-0 shadow-sm">
+                    <h5 class="mb-1 text-dark">🤖 Supervised ML Predicted Composition: <strong class="text-primary">{{ prediction_result.predicted_composition }}</strong></h5>
+                    <small class="text-muted">Model Confidence Score: {{ prediction_result.confidence }}%</small>
+                    <div class="mt-2 small text-muted">
+                        <span class="me-3">Algorithm: {{ prediction_result.algorithm }}</span>
+                        <span class="me-3">Training Records: {{ prediction_result.training_records }}</span>
+                        <span>Target: {{ prediction_result.target_column }}</span>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    ⚠️ Model loaded nahi hai ya prediction generate nahi ho paya. Pehle <code>python train_supervised.py</code> run karein.
+                </div>
+                {% endif %}
+
+                <h5 class="mt-4 text-success fw-bold">🔄 Available Inventory Substitutes (Exact Composition Match):</h5>
+                <hr>
+                <div class="list-group">
+                {% for sub in substitutes %}
+                    <div class="list-group-item p-3 mb-2 rounded border">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div>
+                                <h6 class="fw-bold mb-1">{{ sub.name }}</h6>
+                                <small class="text-muted">Type: {{ sub.type_form }} | Salt: {{ sub.composition }}</small>
+                            </div>
+                            <div class="text-end">
+                                <h5 class="text-success fw-bold mb-1">₹{{ sub.sell_price }}</h5>
+                                <span class="badge bg-secondary">Stock: {{ sub.stock }}</span>
+                            </div>
+                        </div>
+                        <div class="mt-3 row g-2 small">
+                            <div class="col-md-3"><span class="text-muted">MRP:</span> ₹{{ sub.mrp }}</div>
+                            <div class="col-md-3"><span class="text-muted">Buy Price:</span> ₹{{ sub.buy_price }}</div>
+                            <div class="col-md-3"><span class="text-muted">Margin %:</span> {{ sub.margin_percentage }}%</div>
+                            <div class="col-md-3"><span class="text-muted">MRP Margin %:</span> {{ sub.mrp_margin_percentage }}%</div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">Is predicted composition ki koi bhi medicine inventory stock me nahi mili.</p>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

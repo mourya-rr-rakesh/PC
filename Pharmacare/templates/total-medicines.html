@@ -536,178 +536,303 @@
         letter-spacing: 0.06em;
       }
     }
-/* ==============================
-   SEARCH AREA
-   ============================== */
+    /* ── SUPERVISED AI SEARCH ── */
+    .ai-search-btn {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(14, 165, 233, 0.25);
+      border-radius: 13px;
+      background: linear-gradient(145deg, #EFFAFF, #E0F2FE);
+      color: #0284C7;
+      cursor: pointer;
+      font-size: 19px;
+      box-shadow: 0 3px 10px rgba(2, 132, 199, 0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
 
-.ai-search-btn {
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
-    flex-shrink: 0;
+    .ai-search-btn:hover,
+    .ai-search-btn[aria-expanded="true"] {
+      background: linear-gradient(145deg, #E0F2FE, #BAE6FD);
+      box-shadow: 0 6px 16px rgba(2, 132, 199, 0.16);
+      transform: translateY(-1px);
+    }
 
-    border: 1px solid rgba(14, 165, 233, 0.25);
-    border-radius: 10px;
+    .ai-search-btn:focus-visible,
+    .ai-search-row input:focus-visible,
+    .ai-search-row button:focus-visible {
+      outline: 3px solid rgba(14, 165, 233, 0.24);
+      outline-offset: 2px;
+    }
 
-    background: rgba(14, 165, 233, 0.08);
-    color: #0284C7;
+    .ai-search-box {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 20px;
+      width: min(440px, calc(100vw - 40px));
+      padding: 0;
+      background: #fff;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 20px;
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.2), 0 4px 14px rgba(15, 23, 42, 0.06);
+      display: none;
+      overflow: hidden;
+      z-index: 1000;
+      animation: ai-search-enter 0.2s ease-out;
+    }
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    .ai-search-box.active {
+      display: block;
+    }
 
-    cursor: pointer;
-    font-size: 17px;
+    @keyframes ai-search-enter {
+      from { opacity: 0; transform: translateY(-7px) scale(0.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
-    transition: all 0.2s;
-}
+    .ai-search-heading {
+      position: relative;
+      padding: 20px 22px 17px;
+      background: radial-gradient(circle at 92% 0%, rgba(125, 211, 252, 0.42), transparent 35%), linear-gradient(135deg, #F0F9FF, #F8FAFC 72%);
+      border-bottom: 1px solid #E8F1F8;
+    }
 
-.ai-search-btn:hover {
-    background: rgba(14, 165, 233, 0.15);
-    transform: translateY(-1px);
-}
+    .ai-search-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      color: #0F172A;
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
 
+    .ai-search-title-icon {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      place-items: center;
+      border-radius: 11px;
+      background: #fff;
+      box-shadow: 0 3px 10px rgba(2, 132, 199, 0.12);
+      font-size: 17px;
+    }
 
-/* Small popup */
+    .ai-search-subtitle {
+      margin: 8px 0 0 44px;
+      color: #64748B;
+      font-size: 12px;
+      line-height: 1.5;
+    }
 
-.ai-search-box {
-    position: absolute;
+    .ai-search-content {
+      padding: 18px 20px 20px;
+    }
 
-    top: 72px;
-    right: 20px;
+    .ai-search-label {
+      display: block;
+      margin-bottom: 7px;
+      color: #475569;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.045em;
+      text-transform: uppercase;
+    }
 
-    width: 320px;
+    .ai-search-row {
+      display: flex;
+      gap: 9px;
+    }
 
-    padding: 12px;
+    .ai-search-row input {
+      flex: 1;
+      min-width: 0;
+      height: 45px;
+      padding: 0 14px;
+      border: 1px solid #D8E3EE;
+      border-radius: 12px;
+      outline: none;
+      background: #F8FAFC;
+      color: #0F172A;
+      font-size: 13px;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
 
-    background: #fff;
+    .ai-search-row input::placeholder {
+      color: #94A3B8;
+    }
 
-    border: 1px solid #e1eaf3;
-    border-radius: 12px;
+    .ai-search-row input:focus {
+      border-color: #38BDF8;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+    }
 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    .ai-search-row button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-width: 104px;
+      height: 45px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0EA5E9, #0284C7);
+      box-shadow: 0 4px 11px rgba(2, 132, 199, 0.2);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
 
-    display: none;
+    .ai-search-row button:hover:not(:disabled) {
+      box-shadow: 0 7px 16px rgba(2, 132, 199, 0.28);
+      transform: translateY(-1px);
+    }
 
-    z-index: 1000;
-}
+    .ai-search-row button:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
 
-.ai-search-box.active {
-    display: block;
-}
+    .ai-search-status {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin-top: 13px;
+      padding: 10px 12px;
+      border: 1px solid #E0F2FE;
+      border-radius: 11px;
+      background: #F0F9FF;
+      color: #0369A1;
+      font-size: 12px;
+      line-height: 1.45;
+    }
 
-.ai-search-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: #0F172A;
+    .ai-search-status:not(:empty) {
+      display: flex;
+    }
 
-    margin-bottom: 8px;
-}
+    .ai-search-status:not(:empty)::before {
+      content: "✦";
+      color: #0284C7;
+      font-size: 14px;
+      font-weight: 700;
+    }
 
-.ai-search-row {
-    display: flex;
-    gap: 7px;
-}
+    .ai-search-status.error {
+      border-color: #FECACA;
+      background: #FEF2F2;
+      color: #B91C1C;
+    }
 
-.ai-search-row input {
-    flex: 1;
-    min-width: 0;
+    .ai-search-status.error::before {
+      content: "!";
+      display: grid;
+      width: 17px;
+      height: 17px;
+      flex: 0 0 17px;
+      place-items: center;
+      border-radius: 50%;
+      background: #FEE2E2;
+      color: #B91C1C;
+      font-size: 11px;
+    }
 
-    height: 36px;
+    .ai-search-result {
+      display: none;
+      max-height: min(360px, 48vh);
+      margin-top: 12px;
+      padding: 0;
+      overflow-y: auto;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      background: #fff;
+      text-align: left;
+      scrollbar-color: #CBD5E1 transparent;
+      scrollbar-width: thin;
+    }
 
-    padding: 0 10px;
+    .ai-search-result.show {
+      display: block;
+      animation: ai-search-enter 0.2s ease-out;
+    }
 
-    border: 1px solid #d8e3ee;
-    border-radius: 8px;
+    .ai-result-item {
+      margin: 0;
+      padding: 15px 16px;
+    }
 
-    outline: none;
+    .ai-result-item + .ai-result-item {
+      border-top: 1px solid #E8EEF4;
+    }
 
-    font-size: 13px;
-}
+    .ai-result-item:first-child {
+      background: linear-gradient(135deg, #F0F9FF, #fff 82%);
+    }
 
-.ai-search-row input:focus {
-    border-color: #0EA5E9;
-}
+    .ai-result-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 8px;
+      color: #0369A1;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.075em;
+      text-transform: uppercase;
+    }
 
-.ai-search-row button {
-    height: 36px;
+    .ai-result-value {
+      color: #334155;
+      font-size: 12px;
+      line-height: 1.65;
+      overflow-wrap: anywhere;
+    }
 
-    padding: 0 12px;
+    .ai-result-value strong {
+      color: #0F172A;
+      font-weight: 700;
+    }
 
-    border: none;
-    border-radius: 8px;
+    .ai-result-name {
+      color: #111827;
+      font-size: 14px;
+      font-weight: 700;
+    }
 
-    background: #0EA5E9;
-    color: white;
+    @media (max-width: 640px) {
+      .ai-search-box {
+        top: calc(100% + 10px);
+        right: 0;
+        width: min(440px, calc(100vw - 32px));
+      }
 
-    font-size: 12px;
-    font-weight: 600;
+      .ai-search-heading {
+        padding: 17px 17px 15px;
+      }
 
-    cursor: pointer;
-}
+      .ai-search-content {
+        padding: 16px;
+      }
 
-.ai-search-row button:disabled {
-    opacity: 0.6;
-    cursor: wait;
-}
+      .ai-search-row {
+        flex-direction: column;
+      }
 
-.ai-search-status {
-    margin-top: 8px;
-
-    font-size: 11px;
-    color: #64748B;
-}
-
-.ai-search-status.error {
-    color: #DC2626;
-}
-
-
-.ai-search-result {
-    display: none;
-    margin-top: 10px;
-    padding: 12px;
-    border-radius: 10px;
-    background: #F8FAFC;
-    border: 1px solid #E2E8F0;
-    text-align: left;
-    max-height: 260px;
-    overflow-y: auto;
-}
-
-.ai-search-result.show {
-    display: block;
-}
-
-.ai-result-item {
-    margin-bottom: 9px;
-}
-
-.ai-result-item:last-child {
-    margin-bottom: 0;
-}
-
-.ai-result-label {
-    font-size: 10px;
-    font-weight: 700;
-    color: #64748B;
-    text-transform: uppercase;
-    margin-bottom: 3px;
-    letter-spacing: 0.04em;
-}
-
-.ai-result-value {
-    font-size: 12px;
-    line-height: 1.5;
-    color: #0F172A;
-    word-break: break-word;
-}
-
-.ai-result-name {
-    font-size: 14px;
-    font-weight: 700;
-    color: #111827;
-}
+      .ai-search-row button {
+        width: 100%;
+      }
+    }
 
 
 
@@ -805,6 +930,8 @@
             id="aiSearchBtn"
             class="ai-search-btn"
             type="button"
+            aria-expanded="false"
+            aria-controls="aiSearchBox"
             title="AI Search">
             ✨
         </button>
@@ -818,28 +945,37 @@
     <!-- Small AI popup -->
     <div id="aiSearchBox" class="ai-search-box">
 
-        <div class="ai-search-title">
-            ✨ AI Medicine Search
+        <div class="ai-search-heading">
+          <div class="ai-search-title">
+            <span class="ai-search-title-icon" aria-hidden="true">✨</span>
+            Supervised medicine search
+          </div>
+          <p class="ai-search-subtitle">Predict composition and find matching ingredients in your inventory.</p>
         </div>
 
-        <div class="ai-search-row">
+        <div class="ai-search-content">
+          <label class="ai-search-label" for="aiSearchInput">Medicine name</label>
+          <div class="ai-search-row">
 
             <input
                 id="aiSearchInput"
                 type="text"
-                placeholder="e.g. Crocin"
+                placeholder="Type a brand or medicine name…"
+                autocomplete="off"
             />
 
             <button
                 id="aiSearchSubmit"
                 type="button">
+                <span aria-hidden="true">⌕</span>
                 Search
             </button>
 
-        </div>
+          </div>
 
-        <div id="aiSearchStatus" class="ai-search-status"></div>
-       <div id="aiSearchResult" class="ai-search-result"></div> 
+          <div id="aiSearchStatus" class="ai-search-status" role="status" aria-live="polite"></div>
+          <div id="aiSearchResult" class="ai-search-result"></div>
+        </div>
 
     </div>
 
@@ -1026,9 +1162,10 @@ aiSearchBtn.addEventListener("click", function () {
     }
 
     // Popup open / close
-    aiSearchBox.classList.toggle("active");
+    const isOpen = aiSearchBox.classList.toggle("active");
+    aiSearchBtn.setAttribute("aria-expanded", String(isOpen));
 
-    if (aiSearchBox.classList.contains("active")) {
+    if (isOpen) {
         aiSearchInput.focus();
     }
 });
@@ -1048,7 +1185,7 @@ async function runAISearch() {
     aiSearchSubmit.innerText = "Searching...";
 
     aiSearchStatus.className = "ai-search-status";
-    aiSearchStatus.innerText = "Finding medicine information...";
+    aiSearchStatus.innerText = "Running supervised medicine prediction...";
 
     // Old result clear
     aiSearchResult.innerHTML = "";
@@ -1085,20 +1222,20 @@ async function runAISearch() {
         }
 
 
-        const info = data.external_info || {};
+        const prediction = data.supervised_prediction || {};
         const localMatches = Array.isArray(data.inventory_matches)
           ? data.inventory_matches
           : [];
 
-        if (localMatches.length === 0 && !info.found) {
+        if (!prediction.predicted_composition) {
 
             aiSearchStatus.className =
                 "ai-search-status error";
 
             aiSearchStatus.innerText =
-                info.error || "Medicine could not be reliably identified from available external sources.";
+                "The supervised model could not identify a composition for this medicine.";
 
-              renderAiSearchResult([], info);
+              renderAiSearchResult([], prediction);
 
             return;
         }
@@ -1107,10 +1244,10 @@ async function runAISearch() {
             "ai-search-status";
 
             aiSearchStatus.innerText = localMatches.length
-              ? (info.found ? "Local inventory and verified external information found." : "Local inventory found. External information was unavailable.")
-              : "Medicine information found from verified external sources.";
+              ? "Supervised prediction complete. Matching composition found in your inventory."
+              : "Supervised prediction complete. No matching composition was found in your inventory.";
 
-            renderAiSearchResult(localMatches, info);
+        renderAiSearchResult(localMatches, prediction);
     } catch (error) {
 
         console.error("AI Search Error:", error);
@@ -1128,8 +1265,18 @@ async function runAISearch() {
     }
 }
 
-function renderAiSearchResult(localMatches, info) {
+function renderAiSearchResult(localMatches, prediction) {
   const value = (text) => escapeHtml(text || "Not available");
+  const confidence = prediction.confidence == null
+    ? "Not available"
+    : `${value(prediction.confidence)}%`;
+  const predictionHtml = prediction.predicted_composition ? `<div class="ai-result-item">
+    <div class="ai-result-label">Supervised ML Prediction</div>
+    <div class="ai-result-value"><strong>Predicted composition:</strong> ${value(prediction.predicted_composition)}</div>
+    <div class="ai-result-value"><strong>Model confidence:</strong> ${confidence}</div>
+    ${prediction.algorithm ? `<div class="ai-result-value"><strong>Algorithm:</strong> ${value(prediction.algorithm)}</div>` : ""}
+    <div class="ai-result-value" style="margin-top:6px;color:#64748B;">Prediction is informational, not a recommendation to use or substitute a medicine. Confirm with a qualified pharmacist.</div>
+    </div>` : "";
   const localHtml = localMatches.length
     ? `<div class="ai-result-item"><div class="ai-result-label">Local Inventory</div>${localMatches.map(m => `
       <div class="ai-result-value" style="margin-bottom:8px;">
@@ -1138,29 +1285,9 @@ function renderAiSearchResult(localMatches, info) {
         Stock: ${value(m.stock)} &nbsp; MRP: ₹${value(Number(m.mrp || 0).toFixed(2))}<br>
         Medicine ID: ${value(m.medicine_id)}
       </div>`).join("")}</div>`
-    : `<div class="ai-result-item"><div class="ai-result-label">Local Inventory</div><div class="ai-result-value">No matching medicine in local inventory.</div></div>`;
+    : `<div class="ai-result-item"><div class="ai-result-label">Local Inventory</div><div class="ai-result-value">No matching composition in local inventory.</div></div>`;
 
-  const sourceHtml = Array.isArray(info.sources) && info.sources.length
-    ? `<div class="ai-result-item"><div class="ai-result-label">Verified Sources</div>${info.sources.map(source => {
-      const url = String(source.url || "");
-      if (!/^https?:\/\//i.test(url)) return "";
-      return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="ai-result-value" style="display:block;color:#0284C7;margin-bottom:4px;">${value(source.title || url)}</a>`;
-    }).join("")}</div>`
-    : "";
-
-  const externalHtml = info.found ? `<div class="ai-result-item" style="border-top:1px solid #E2E8F0;padding-top:10px;">
-    <div class="ai-result-label">External Medicine Information</div>
-    <div class="ai-result-value ai-result-name">${value(info.medicine_name)}</div>
-    <div class="ai-result-value">Generic / Composition: ${value(info.composition)}</div>
-    <div class="ai-result-value">Strength: ${value(info.strength)}</div>
-    <div class="ai-result-value">Dosage form: ${value(info.dosage_form)}</div>
-    <div class="ai-result-value">Description: ${value(info.description)}</div>
-    <div class="ai-result-value">Common uses: ${value(info.common_uses)}</div>
-    <div class="ai-result-value">Age information: ${value(info.age_information)}</div>
-    <div class="ai-result-value">Warnings: ${value(info.warnings)}</div>
-    </div>${sourceHtml}` : "";
-
-  aiSearchResult.innerHTML = localHtml + externalHtml;
+  aiSearchResult.innerHTML = predictionHtml + localHtml;
   aiSearchResult.classList.add("show");
 }
 

@@ -3,6 +3,7 @@ openpyxl
 gunicorn
 whitenoise
 requests
+scikit-learn
 google-genai
 python-dotenv
 dj-database-url

@@ -1,23 +1,7 @@
 from django.urls import path
 
-from .views import (
-    search_and_match_medicine,
-    ai_search_page,
-)
-
+from .views import supervised_medicine_search
 
 urlpatterns = [
-
-    path(
-        "search/",
-        ai_search_page,
-        name="ai_search_page"
-    ),
-
-    path(
-        "api/search/",
-        search_and_match_medicine,
-        name="ai_medicine_search"
-    ),
-
+    path("api/search/", supervised_medicine_search, name="supervised_medicine_search"),
 ]
