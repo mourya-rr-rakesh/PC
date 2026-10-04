@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from inventory.models import Medicine
-from .predictor import normalize_ingredient_names
+from .predictor import _predict_sparse_cosine_knn, normalize_ingredient_names
 
 
 class SupervisedMedicineSearchTests(TestCase):
@@ -122,3 +122,54 @@ class SupervisedMedicineSearchTests(TestCase):
             normalize_ingredient_names("Paracetamol (1000mg)"),
             normalize_ingredient_names("Paracetamol 500mg"),
         )
+
+
+class SparseCosineKnnPredictionTests(TestCase):
+    def test_matches_sklearn_prediction_and_confidence(self):
+        import numpy as np
+        from sklearn.feature_extraction.text import TfidfVectorizer
+        from sklearn.neighbors import KNeighborsClassifier
+
+        names = [
+            "Paracetamol",
+            "Dolo 650",
+            "Crocin Advance",
+            "Amoxicillin",
+            "Amoxycillin",
+            "Ibuprofen",
+        ]
+        labels = [
+            "paracetamol",
+            "paracetamol",
+            "paracetamol",
+            "amoxicillin",
+            "amoxicillin",
+            "ibuprofen",
+        ]
+        vectorizer = TfidfVectorizer(
+            analyzer="char_wb",
+            ngram_range=(2, 5),
+            dtype=np.float32,
+        )
+        training_vectors = vectorizer.fit_transform(names)
+        model = KNeighborsClassifier(
+            n_neighbors=3,
+            weights="distance",
+            metric="cosine",
+            algorithm="brute",
+            n_jobs=1,
+        ).fit(training_vectors, labels)
+
+        for query in ("Paracetamol", "Amoxycillin", "Unknown medicine"):
+            query_vector = vectorizer.transform([query])
+            expected_label = model.predict(query_vector)[0]
+            expected_confidence = round(
+                float(max(model.predict_proba(query_vector)[0])) * 100, 1
+            )
+
+            actual_label, actual_confidence = _predict_sparse_cosine_knn(
+                model, query_vector
+            )
+
+            self.assertEqual(actual_label, expected_label)
+            self.assertEqual(actual_confidence, expected_confidence)
