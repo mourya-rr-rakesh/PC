@@ -65,9 +65,9 @@ def supervised_medicine_search(request):
                 "stock": medicine.stock,
                 "mrp": medicine.mrp,
             }
+            medicine_ingredients = normalize_ingredient_names(medicine.composition)
             if (
-                normalize_ingredient_names(medicine.composition)
-                == predicted_ingredients
+                f" {predicted_ingredients} " in f" {medicine_ingredients} "
                 and len(inventory_matches) < 10
             ):
                 inventory_matches.append(item)

@@ -57,12 +57,12 @@ class SupervisedMedicineSearchTests(TestCase):
         different_strength_medicine = Medicine.objects.create(
             user=self.user,
             name="Nimoril Plus",
-            composition="Paracetamol 500mg",
+            composition="Paracetamol 500mg + Nimesulide 100mg",
             exp_date=date.today() - timedelta(days=30),
             mrp=12,
             buy_price=8,
             sell_price=10,
-            stock=0,
+            stock=3,
         )
         Medicine.objects.create(
             user=self.user,
